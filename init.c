@@ -42,21 +42,16 @@ int init(SDL_Window** window, SDL_Renderer** renderer){
     return success;
 }
 
-void close(SDL_Texture** texture, SDL_Renderer** renderer, SDL_Window** window, TTF_Font* Font){
-    SDL_DestroyTexture(*texture);
-    *texture= NULL;
-
+void close(SDL_Renderer** renderer, SDL_Window** window){
     SDL_DestroyRenderer(*renderer);
-    *renderer = NULL;
+    //*renderer = NULL;
 
     SDL_DestroyWindow(*window);
-    *window = NULL;
-
-    TTF_CloseFont(Font);
-    Font = NULL;
+    //*window = NULL;
 
     //Quit SDL subsystems
-    SDL_Delay(7000);
+    //SDL_Delay(7000);
+
     Mix_Quit();
     IMG_Quit();
     TTF_Quit();

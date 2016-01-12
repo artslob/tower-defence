@@ -15,6 +15,7 @@
 enum GameStates{
     IN_MENU,
     START,
+    IN_GAME,
     EXIT
 };
 
@@ -41,9 +42,9 @@ typedef struct VolumeMenu{
     SDL_Texture* mouseOutside_volOff;
 }VolumeMenu;
 
-
+int menu(SDL_Renderer*);
 void initButtons(SDL_Renderer*, TTF_Font*, ButtonMenu*, ButtonMenu*, VolumeMenu*);
-void renderInfinityText(SDL_Renderer*, SDL_Texture* );
+void renderInfinityText(SDL_Renderer*, SDL_Texture*,int*, int, int, float);
 SDL_Texture* loadTextTexture(char*, TTF_Font*, SDL_Color, SDL_Renderer*);
 
 

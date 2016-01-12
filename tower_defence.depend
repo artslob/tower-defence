@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1452449205 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\main.c
+1452586822 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\main.c
 	"global.h"
 
 1451992421 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\func.c
@@ -12,19 +12,19 @@
 	<SDL_image.h>
 	<SDL_ttf.h>
 
-1452363238 c:\users\123\documents\codeblocksprojects\projects\tower_defence\main.h
+1452586506 c:\users\123\documents\codeblocksprojects\projects\tower_defence\main.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1451992354 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.c
+1452630024 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.c
 	"wave.h"
 
 1451992525 c:\users\123\documents\codeblocksprojects\projects\tower_defence\func.h
 	<SDL.h>
 
-1452348041 c:\users\123\documents\codeblocksprojects\projects\tower_defence\global.h
+1452514647 c:\users\123\documents\codeblocksprojects\projects\tower_defence\global.h
 	<stdlib.h>
 	<stdio.h>
 	<SDL.h>
@@ -35,12 +35,15 @@
 	"init.h"
 	"wave.h"
 	"bg.h"
+	"game.h"
+	"startscreen.h"
 
-1452070641 c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.h
+1452629645 c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	<SDL_mixer.h>
+	"bg.h"
 
 1452362713 c:\users\123\documents\codeblocksprojects\projects\tower_defence\init.h
 	<SDL.h>
@@ -48,13 +51,13 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1452445865 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\init.c
+1452527533 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\init.c
 	"init.h"
 
 1452441605 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\bg.c
 	"bg.h"
 
-1452363239 c:\users\123\documents\codeblocksprojects\projects\tower_defence\bg.h
+1452520296 c:\users\123\documents\codeblocksprojects\projects\tower_defence\bg.h
 	<stdlib.h>
 	<stdio.h>
 	<malloc.h>
@@ -63,14 +66,26 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1452449652 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\startscreen.c
+1452621269 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\startscreen.c
 	"startscreen.h"
 
-1452426987 c:\users\123\documents\codeblocksprojects\projects\tower_defence\startscreen.h
+1452514670 c:\users\123\documents\codeblocksprojects\projects\tower_defence\startscreen.h
 	<stdlib.h>
 	<stdio.h>
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	<SDL_mixer.h>
+
+1452629944 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.c
+	"game.h"
+
+1452538594 c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	"bg.h"
+	"startscreen.h"
+	"wave.h"
 

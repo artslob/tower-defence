@@ -13,6 +13,9 @@
 #include "init.h"
 #include "wave.h"
 #include "bg.h"
+#include "game.h"
+#include "startscreen.h"
+
 
 
 #endif // GLOBAL_H

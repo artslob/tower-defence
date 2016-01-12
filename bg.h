@@ -20,7 +20,7 @@
 #define BLOCK_HEIGHT 40
 
 typedef struct block{
-    SDL_Texture* texture ;
+    SDL_Texture* texture;
     struct block* next;
 }block;
 

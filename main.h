@@ -10,8 +10,10 @@
 #define SCREEN_HEIGHT 480
 
 
+
 void render(int, int, SDL_Rect*, SDL_Surface*, SDL_Renderer*, SDL_Texture*, double, SDL_Point*, SDL_RendererFlip);
 SDL_Texture* getTextureFromPath(char*, SDL_Renderer*);
+void showCursor(SDL_Renderer*, SDL_Texture*);
 
 void prError(char*);
 

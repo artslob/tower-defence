@@ -1,7 +1,10 @@
 #include "startscreen.h"
 
-int menu(SDL_Renderer* Renderer, SDL_Window* Window){
-    SDL_Event* event;
+int menu(SDL_Renderer* Renderer){
+    SDL_Event event;
+    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.png", Renderer);
+
+
     ButtonMenu* startButton = malloc(sizeof(ButtonMenu));
     ButtonMenu* exitButton = malloc(sizeof(ButtonMenu));
     VolumeMenu* volumeButton = malloc(sizeof(VolumeMenu));
@@ -19,26 +22,34 @@ int menu(SDL_Renderer* Renderer, SDL_Window* Window){
 
     SDL_Rect menuRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
-    SDL_Texture* menuBgFirst = getTextureFromPath("BMPimages/Parallax/menu_bg_1.png", Renderer);
-//    SDL_Texture* menu_bg_2 = getTextureFromPath("BMPimages/Parallax/menu_bg_2.png", Renderer);
-//    SDL_Texture* menu_bg_3 = getTextureFromPath("BMPimages/Parallax/menu_bg_3.png", Renderer);
-//    SDL_Texture* menu_bg_4 = getTextureFromPath("BMPimages/Parallax/menu_bg_4.png", Renderer);
+    SDL_Texture* menu_bg_1 = getTextureFromPath("BMPimages/Parallax/menu_bg_1.png", Renderer);
+    SDL_Texture* menu_bg_2 = getTextureFromPath("BMPimages/Parallax/menu_bg_2.png", Renderer);
+    SDL_Texture* menu_bg_3 = getTextureFromPath("BMPimages/Parallax/menu_bg_3.png", Renderer);
+    SDL_Texture* menu_bg_4 = getTextureFromPath("BMPimages/Parallax/menu_bg_4.png", Renderer);
+    int displace_menu_bg_2 = 0;
+    int displace_menu_bg_3 = 0;
+    int displace_menu_bg_4 = 0;
 
     Mix_PlayMusic(musicMenu, -1);
     initButtons(Renderer, Font, startButton, exitButton, volumeButton);
+
     startTexture = startButton->mouseOutside;
-    volumeTexture = volumeButton->mouseOutside_volOn;
     exitTexture = exitButton->mouseOutside;
+    volumeTexture = volumeButton->mouseOutside_volOn;
+
+    int timer = 0;
+
     while(state == IN_MENU){
-        while(SDL_PollEvent(event))
+        timer = SDL_GetTicks();
+        while(SDL_PollEvent(&event))
         {
-            if (event->type == SDL_QUIT){
+            if (event.type == SDL_QUIT){
                 state = EXIT;
             }
-            if (event->type == SDL_MOUSEMOTION){
+            if (event.type == SDL_MOUSEMOTION){
                 SDL_GetMouseState(&x, &y);
-                //if (isInside(x, y, startButton)) startTexture = startButton->mouseInside;
-                //else startTexture = startButton->mouseOutside;
+                if (isInside(x, y, startButton)) startTexture = startButton->mouseInside;
+                else startTexture = startButton->mouseOutside;
 
                 if (isInside(x, y, exitButton)) exitTexture = exitButton->mouseInside;
                 else exitTexture = exitButton->mouseOutside;
@@ -52,7 +63,7 @@ int menu(SDL_Renderer* Renderer, SDL_Window* Window){
                     else volumeTexture = volumeButton->mouseOutside_volOff;
                 }
             }
-            if (event->type == SDL_MOUSEBUTTONDOWN){
+            if (event.type == SDL_MOUSEBUTTONDOWN){
                 SDL_GetMouseState(&x, &y);
                 if (isInside(x, y, startButton)) state = START;
 
@@ -75,18 +86,22 @@ int menu(SDL_Renderer* Renderer, SDL_Window* Window){
         SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(Renderer);
 
-        SDL_RenderCopy(Renderer, menuBgFirst, NULL, &menuRect);
+        SDL_RenderCopy(Renderer, menu_bg_1, NULL, &menuRect);
+        renderInfinityText(Renderer, menu_bg_2,&displace_menu_bg_2, 544, 2, 1);
+        renderInfinityText(Renderer, menu_bg_3,&displace_menu_bg_3, 544, 2, 2);
+        renderInfinityText(Renderer, menu_bg_4,&displace_menu_bg_4, 544, 2, 3);
+
 
         SDL_RenderCopy(Renderer, startTexture, NULL, &startButton->Rect);
         SDL_RenderCopy(Renderer, volumeTexture, NULL, &volumeButton->Rect);
         SDL_RenderCopy(Renderer, exitTexture, NULL, &exitButton->Rect);
 
-
+        showCursor(Renderer, cursor_texture);
         SDL_RenderPresent(Renderer);
         getFps();
-        SDL_Delay(10);
-
+        waitForFps(timer, 35);
     }
+    return state;
 }
 
 int isInside(int x, int y, SDL_Rect* Rect){
@@ -96,8 +111,8 @@ int isInside(int x, int y, SDL_Rect* Rect){
 }
 
 void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton, ButtonMenu* exitButton, VolumeMenu* volumeButton){
-    SDL_Color insideColor = {0, 0, 255};
-    SDL_Color outsideColor = {0, 0, 0};
+    SDL_Color insideColor = {255, 0, 0};
+    SDL_Color outsideColor = {0, 0, 255};
 
     startButton->Rect.x = 120;
     startButton->Rect.y = 40;
@@ -117,10 +132,10 @@ void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton
     volumeButton->Rect.y = 0;
     volumeButton->Rect.w = 60;
     volumeButton->Rect.h = 60;
-    volumeButton->mouseInside_volOn = getTextureFromPath("BMPimages/Icons/volumeOnblue.png", Renderer);
-    volumeButton->mouseOutside_volOn = getTextureFromPath("BMPimages/Icons/volumeOnblack.png", Renderer);
-    volumeButton->mouseInside_volOff = getTextureFromPath("BMPimages/Icons/volumeOffblue.png", Renderer);
-    volumeButton->mouseOutside_volOff = getTextureFromPath("BMPimages/Icons/volumeOffblack.png", Renderer);
+    volumeButton->mouseInside_volOn = getTextureFromPath("BMPimages/Icons/volumeOnInside.png", Renderer);
+    volumeButton->mouseOutside_volOn = getTextureFromPath("BMPimages/Icons/volumeOnOutside.png", Renderer);
+    volumeButton->mouseInside_volOff = getTextureFromPath("BMPimages/Icons/volumeOffInside.png", Renderer);
+    volumeButton->mouseOutside_volOff = getTextureFromPath("BMPimages/Icons/volumeOffOutside.png", Renderer);
 }
 
 SDL_Texture* loadTextTexture(char* texturePath, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* renderer){
@@ -141,13 +156,12 @@ SDL_Texture* loadTextTexture(char* texturePath, TTF_Font* Font, SDL_Color textCo
     return texture;
 }
 
-void renderInfinityText(SDL_Renderer* Renderer, SDL_Texture* Texture ){
-    static int displace = 0;
-    SDL_Rect textureRect = {displace, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+void renderInfinityText(SDL_Renderer* Renderer, SDL_Texture* Texture,int* displace, int width_picture, int count, float speed){
+    SDL_Rect textureRect = {*displace, 0, width_picture, SCREEN_HEIGHT};
     SDL_Rect screenRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     SDL_RenderCopy(Renderer, Texture, &textureRect, &screenRect);
-    displace += 2.5;
-    if (displace + SCREEN_WIDTH >= SCREEN_WIDTH * 4){
-        displace = 0;
+    *displace += speed;
+    if (*displace + width_picture >= width_picture * count){
+        *displace = 0;
     }
 }
