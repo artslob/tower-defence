@@ -17,19 +17,21 @@ void createListEnemy(enemy** head, SDL_Renderer* Renderer){
     }
     current_enemy = *head;
     for (count = 0; count < COUNT_IN_WAVE; count++){
+        current_enemy->Max_health = 100;
         current_enemy->health = 100;
         current_enemy->isAlive = 1;
         current_enemy->level = 1;
         current_enemy->angle = 0;
+        current_enemy->inCave = 0;
         if (count < COUNT_IN_WAVE / 2){
             current_enemy->position = POS_UP;
             current_enemy->y = 40;
-            current_enemy->x = -200 + BLOCK_WIDTH * count;
+            current_enemy->x = -320 + BLOCK_WIDTH * 3 / 2 * count;
         }
         else{
             current_enemy->position = POS_DOWN;
             current_enemy->y = 400;
-            current_enemy->x = -400 + BLOCK_WIDTH * count;
+            current_enemy->x = -630 + BLOCK_WIDTH * 3 / 2 * count;
         }
         current_enemy = current_enemy->next;
     }
@@ -118,26 +120,67 @@ void moveEnemies(enemy* head, points* points_up, points* points_down){
     }
 }
 
-void enemyEnterCave(enemy* head, points* points, int* hp){
+void showHPbar(SDL_Renderer* Renderer, enemy* head){
+    SDL_Rect MaxHpRect;
+    SDL_Rect CurHpRect;
     while(head != NULL){
-        if (head->x >= points->pos_x_11) {
-            head->isAlive = 0;
-            if (*hp > 0) *hp -= 10;
+        MaxHpRect.x = head->x;
+        MaxHpRect.y = head->y - 10;
+        MaxHpRect.w = BLOCK_WIDTH;
+        MaxHpRect.h = 5;
+
+        CurHpRect.x = head->x;
+        CurHpRect.y = head->y - 10;
+        CurHpRect.w = (int) BLOCK_WIDTH * head->health / head->Max_health;
+        CurHpRect.h = 5;
+        if (head->isAlive == 1 ) {
+            SDL_SetRenderDrawColor(Renderer, 0x00, 0x00, 0xFF, 0xFF);
+            SDL_RenderFillRect(Renderer, &MaxHpRect);
+            SDL_SetRenderDrawColor(Renderer, 0xFF, 0x00, 0x00, 0xFF);
+            SDL_RenderFillRect(Renderer, &CurHpRect);
         }
         head = head->next;
     }
 }
 
-void renderEnemies(SDL_Renderer* Renderer, enemy* head){
+void enemyEnterCave(enemy* head, points* points, int* hp){
+    while(head != NULL){
+        if (head->x >= points->pos_x_11) {
+            head->isAlive = 0;
+            if (*hp > 0 & head->inCave == 0){
+                head->inCave = 1;
+                *hp -= 10;
+            }
+        }
+        head = head->next;
+    }
+}
+
+void renderEnemies(SDL_Renderer* Renderer, enemy* head, int animation){
     int i = 0;
-    SDL_Rect Rect;
-    SDL_RendererFlip Flip = SDL_FLIP_NONE;
+    SDL_Rect dstRect;
+    SDL_Rect srcRect;
     for (i = 0; i < COUNT_IN_WAVE; i++){
-        Rect.x = head->x;
-        Rect.y = head->y;
-        Rect.w = BLOCK_WIDTH;
-        Rect.h = BLOCK_HEIGHT;
-        if (head->isAlive) SDL_RenderCopyEx(Renderer, head->textureEnemy, NULL, &Rect, head->angle, NULL, Flip);
+        dstRect.x = head->x;
+        dstRect.y = head->y;
+        dstRect.w = BLOCK_WIDTH;
+        dstRect.h = BLOCK_HEIGHT;
+
+        if (head->angle == 0){
+            srcRect.x = animation * PICT_SIZE;
+            srcRect.y = 2 * PICT_SIZE;
+        }
+        if (head->angle == 90){
+            srcRect.x = animation * PICT_SIZE;
+            srcRect.y = 0;
+        }
+        if (head->angle == -90){
+            srcRect.x = animation * PICT_SIZE;
+            srcRect.y = 3 * PICT_SIZE;
+        }
+        srcRect.w = PICT_SIZE;
+        srcRect.h = PICT_SIZE;
+        if (head->isAlive) SDL_RenderCopy(Renderer, head->textureEnemy, &srcRect, &dstRect);
         head = head->next;
     }
 }
@@ -208,19 +251,11 @@ void add_enemy(enemy** head, SDL_Texture* texture){
 sprites_enemy* init_sprites_enemy(SDL_Renderer* Renderer){
     sprites_enemy* new_sprites = malloc(sizeof(sprites_enemy));
     new_sprites->sprite_enemy1 = getTextureFromPath("BMPimages/Wave/1.png", Renderer);
-//    new_sprites->sprite_enemy2 = getTextureFromPath("BMPimages/Wave/2.png", Renderer);
-//    new_sprites->sprite_enemy3 = getTextureFromPath("BMPimages/Wave/3.png", Renderer);
-//    new_sprites->sprite_enemy4 = getTextureFromPath("BMPimages/Wave/4.png", Renderer);
-//    new_sprites->sprite_enemy5 = getTextureFromPath("BMPimages/Wave/5.png", Renderer);
-//    new_sprites->sprite_enemy6 = getTextureFromPath("BMPimages/Wave/6.png", Renderer);
-//    new_sprites->sprite_enemy7 = getTextureFromPath("BMPimages/Wave/7.png", Renderer);
-//    new_sprites->sprite_enemy8 = getTextureFromPath("BMPimages/Wave/8.png", Renderer);
-//    new_sprites->sprite_enemy9 = getTextureFromPath("BMPimages/Wave/9.png", Renderer);
-//    new_sprites->sprite_enemy10 = getTextureFromPath("BMPimages/Wave/10.png", Renderer);
-//    new_sprites->sprite_enemy11 = getTextureFromPath("BMPimages/Wave/11.png", Renderer);
-//    new_sprites->sprite_enemy12 = getTextureFromPath("BMPimages/Wave/12.png", Renderer);
-//    new_sprites->sprite_enemy13 = getTextureFromPath("BMPimages/Wave/13.png", Renderer);
-//    new_sprites->sprite_enemy14 = getTextureFromPath("BMPimages/Wave/14.png", Renderer);
-//    new_sprites->sprite_enemy15 = getTextureFromPath("BMPimages/Wave/15.png", Renderer);
+    new_sprites->sprite_enemy2 = getTextureFromPath("BMPimages/Wave/2.png", Renderer);
+    new_sprites->sprite_enemy3 = getTextureFromPath("BMPimages/Wave/3.png", Renderer);
+    new_sprites->sprite_enemy4 = getTextureFromPath("BMPimages/Wave/4.png", Renderer);
+    new_sprites->sprite_enemy5 = getTextureFromPath("BMPimages/Wave/5.png", Renderer);
+    new_sprites->sprite_enemy6 = getTextureFromPath("BMPimages/Wave/6.png", Renderer);
+    new_sprites->sprite_enemy7 = getTextureFromPath("BMPimages/Wave/7.png", Renderer);
     return new_sprites;
 }

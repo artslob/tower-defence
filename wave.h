@@ -9,6 +9,7 @@
 #include "bg.h"
 
 #define COUNT_IN_WAVE 10
+#define PICT_SIZE 48
 
 enum WavePosition{
     POS_UP,
@@ -42,9 +43,11 @@ typedef struct points{
 
 typedef struct enemy{
     SDL_Texture* textureEnemy;
+    float Max_health;
     float health;
     int angle;
     int isAlive;
+    int inCave;
     int level;
     int position;
     int x;
@@ -75,8 +78,9 @@ void add_enemy(enemy**, SDL_Texture*);
 sprites_enemy* init_sprites_enemy(SDL_Renderer*);
 void createListEnemy(enemy**, SDL_Renderer*);
 void moveEnemies(enemy*,points*, points*);
-void renderEnemies(SDL_Renderer*, enemy*);
+void renderEnemies(SDL_Renderer*, enemy*, int);
 int check_point(enemy*, points*);
 void enemyEnterCave(enemy*, points*, int* hp);
+void showHPbar(SDL_Renderer*, enemy*);
 
 #endif // WAVE_H

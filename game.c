@@ -5,6 +5,7 @@ int game(SDL_Renderer* Renderer, block* BGhead){
     SDL_Event event;
     SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.png", Renderer);
     int timer = 0;
+    int frame = 0;
 
     points* points_up = malloc(sizeof(points));
     points* points_down = malloc(sizeof(points));
@@ -29,15 +30,17 @@ int game(SDL_Renderer* Renderer, block* BGhead){
         BG_list_render(Renderer, BGhead);
 
         moveEnemies(enemy_head, points_up, points_down);
-        renderEnemies(Renderer, enemy_head);
         enemyEnterCave(enemy_head, points_up, &gamerHP);
+        renderEnemies(Renderer, enemy_head, frame / 17);
+        showHPbar(Renderer, enemy_head);
 
 
         showCursor(Renderer, cursor_texture);
         SDL_RenderPresent(Renderer);
 
-
-        waitForFps(timer, 50);
+        frame++;
+        if (frame == 51) frame = 0;
+        waitForFps(timer, 51);
         getFps();
     }
 
