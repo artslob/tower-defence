@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1452586822 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\main.c
+1452777424 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\main.c
 	"global.h"
 
 1451992421 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\func.c
@@ -18,13 +18,13 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1452694958 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.c
+1452765830 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.c
 	"wave.h"
 
 1451992525 c:\users\123\documents\codeblocksprojects\projects\tower_defence\func.h
 	<SDL.h>
 
-1452514647 c:\users\123\documents\codeblocksprojects\projects\tower_defence\global.h
+1452703084 c:\users\123\documents\codeblocksprojects\projects\tower_defence\global.h
 	<stdlib.h>
 	<stdio.h>
 	<SDL.h>
@@ -37,6 +37,7 @@
 	"bg.h"
 	"game.h"
 	"startscreen.h"
+	"tower.h"
 
 1452695216 c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.h
 	<SDL.h>
@@ -77,10 +78,10 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1452695145 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.c
+1452798716 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.c
 	"game.h"
 
-1452538594 c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.h
+1452704824 c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -88,4 +89,15 @@
 	"bg.h"
 	"startscreen.h"
 	"wave.h"
+	"tower.h"
+
+1452781839 c:\users\123\documents\codeblocksprojects\projects\tower_defence\tower.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	"bg.h"
+
+1452798437 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\tower.c
+	"tower.h"
 

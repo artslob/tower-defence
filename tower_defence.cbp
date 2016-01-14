@@ -52,6 +52,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="startscreen.h" />
+		<Unit filename="tower.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tower.h" />
 		<Unit filename="wave.c">
 			<Option compilerVar="CC" />
 		</Unit>

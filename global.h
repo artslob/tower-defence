@@ -15,7 +15,7 @@
 #include "bg.h"
 #include "game.h"
 #include "startscreen.h"
-
+#include "tower.h"
 
 
 #endif // GLOBAL_H

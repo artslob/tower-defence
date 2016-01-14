@@ -35,7 +35,6 @@ void createListEnemy(enemy** head, SDL_Renderer* Renderer){
         }
         current_enemy = current_enemy->next;
     }
-
 }
 
 void moveEnemies(enemy* head, points* points_up, points* points_down){
@@ -245,7 +244,6 @@ void add_enemy(enemy** head, SDL_Texture* texture){
         current_enemy->next = new_enemy;
     }
     else *head = new_enemy;
-
 }
 
 sprites_enemy* init_sprites_enemy(SDL_Renderer* Renderer){
