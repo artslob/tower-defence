@@ -21,7 +21,7 @@ void createListEnemy(enemy** head, SDL_Renderer* Renderer){
         current_enemy->health = 100;
         current_enemy->isAlive = 1;
         current_enemy->level = 1;
-        current_enemy->angle = 0;
+        current_enemy->angle = MOV_RIGHT;
         current_enemy->inCave = 0;
         if (count < COUNT_IN_WAVE / 2){
             current_enemy->position = POS_UP;
@@ -46,73 +46,73 @@ void moveEnemies(enemy* head, points* points_up, points* points_down){
             if (current_enemy->y == points_up->pos_y_1) current_enemy->x++;
             if (current_enemy->x == points_up->pos_x_2) {
                 current_enemy->y++;
-                current_enemy->angle = 90;
+                current_enemy->angle = MOV_DOWN;
             }
             if (current_enemy->y == points_up->pos_y_2) {
                 current_enemy->x++;
-                current_enemy->angle = 0;
+                current_enemy->angle = MOV_RIGHT;
             }
             if (current_enemy->x == points_up->pos_x_3){
                 current_enemy->y++;
-                current_enemy->angle = 90;
+                current_enemy->angle = MOV_DOWN;
             }
             if (current_enemy->y == points_up->pos_y_4 & current_enemy->x < points_up->pos_x_7){
                 current_enemy->x++;
-                current_enemy->angle = 0;
+                current_enemy->angle = MOV_RIGHT;
             }
             if (current_enemy->x == points_up->pos_x_5){
                 current_enemy->y++;
-                current_enemy->angle = 90;
+                current_enemy->angle = MOV_DOWN;
             }
             if (current_enemy->y == points_up->pos_y_6){
                 current_enemy->x++;
-                current_enemy->angle = 0;
+                current_enemy->angle = MOV_RIGHT;
             }
             if (current_enemy->x == points_up->pos_x_7){
                 current_enemy->y--;
-                current_enemy->angle = -90;
+                current_enemy->angle = MOV_UP;
             }
             if (current_enemy->x == points_up->pos_x_9){
                 current_enemy->y++;
-                current_enemy->angle = 90;
+                current_enemy->angle = MOV_DOWN;
             }
         }
         else{
             if (current_enemy->y == points_down->pos_y_1){
                 current_enemy->x++;
-                current_enemy->angle = 0;
+                current_enemy->angle = MOV_RIGHT;
             }
             if (current_enemy->x == points_down->pos_x_2) {
                 current_enemy->y--;
-                current_enemy->angle = -90;
+                current_enemy->angle = MOV_UP;
             }
             if (current_enemy->y == points_down->pos_y_3 & current_enemy->x < points_down->pos_x_8) {
                 current_enemy->x++;
-                current_enemy->angle = 0;
+                current_enemy->angle = MOV_RIGHT;
             }
             if (current_enemy->x == points_down->pos_x_4){
                 current_enemy->y--;
-                current_enemy->angle = -90;
+                current_enemy->angle = MOV_UP;
             }
             if (current_enemy->y == points_down->pos_y_5 & current_enemy->x < points_down->pos_x_8){
                 current_enemy->x++;
-                current_enemy->angle = 0;
+                current_enemy->angle = MOV_RIGHT;
             }
             if (current_enemy->x == points_up->pos_x_6){
                 current_enemy->y--;
-                current_enemy->angle = -90;
+                current_enemy->angle = MOV_UP;
             }
             if (current_enemy->y == points_up->pos_y_6){
                 current_enemy->x++;
-                current_enemy->angle = 0;
+                current_enemy->angle = MOV_RIGHT;
             }
             if (current_enemy->x == points_up->pos_x_7){
                 current_enemy->y++;
-                current_enemy->angle = 90;
+                current_enemy->angle = MOV_DOWN;
             }
             if (current_enemy->x == points_up->pos_x_9){
                 current_enemy->y--;
-                current_enemy->angle = -90;
+                current_enemy->angle = MOV_UP;
             }
         }
         current_enemy = current_enemy->next;
@@ -165,15 +165,15 @@ void renderEnemies(SDL_Renderer* Renderer, enemy* head, int animation){
         dstRect.w = BLOCK_WIDTH;
         dstRect.h = BLOCK_HEIGHT;
 
-        if (head->angle == 0){
+        if (head->angle == MOV_RIGHT){
             srcRect.x = animation * PICT_SIZE;
             srcRect.y = 2 * PICT_SIZE;
         }
-        if (head->angle == 90){
+        if (head->angle == MOV_DOWN){
             srcRect.x = animation * PICT_SIZE;
             srcRect.y = 0;
         }
-        if (head->angle == -90){
+        if (head->angle == MOV_UP){
             srcRect.x = animation * PICT_SIZE;
             srcRect.y = 3 * PICT_SIZE;
         }

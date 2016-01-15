@@ -18,7 +18,7 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1452765830 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.c
+1452884217 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.c
 	"wave.h"
 
 1451992525 c:\users\123\documents\codeblocksprojects\projects\tower_defence\func.h
@@ -39,7 +39,7 @@
 	"startscreen.h"
 	"tower.h"
 
-1452695216 c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.h
+1452883957 c:\users\123\documents\codeblocksprojects\projects\tower_defence\wave.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -78,7 +78,7 @@
 	<SDL_ttf.h>
 	<SDL_mixer.h>
 
-1452798716 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.c
+1452884690 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.c
 	"game.h"
 
 1452704824 c:\users\123\documents\codeblocksprojects\projects\tower_defence\game.h
@@ -91,13 +91,15 @@
 	"wave.h"
 	"tower.h"
 
-1452781839 c:\users\123\documents\codeblocksprojects\projects\tower_defence\tower.h
+1452888065 c:\users\123\documents\codeblocksprojects\projects\tower_defence\tower.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
 	<SDL_mixer.h>
+	<math.h>
 	"bg.h"
+	"wave.h"
 
-1452798437 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\tower.c
+1452888126 source:c:\users\123\documents\codeblocksprojects\projects\tower_defence\tower.c
 	"tower.h"
 

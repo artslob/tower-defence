@@ -5,20 +5,23 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
+#include <math.h>
 
 #include "bg.h"
+#include "wave.h"
 
 #define COUNT_TOWER 5
 
 typedef struct tower{
     SDL_Texture* texture;
     float speed;
+    double angle;
     int damage;
-    int radius;
+    double radius;
     int level;
     int cost;
-    int x;
-    int y;
+    float x;
+    float y;
     struct tower* next;
 }tower;
 

@@ -12,17 +12,30 @@ tower* clickedOnTowerPosition(tower* head, int x, int y){
     return NULL;
 }
 
-void renderTowers(tower* head, SDL_Renderer* Renderer){
+void renderTowers(tower* tow_head, enemy* enemy_head, SDL_Renderer* Renderer){
     SDL_Rect Rect;
-    while (head != NULL){
-        if (head->texture != NULL){
-            Rect.x = head->x;
-            Rect.y = head->y;
+    enemy* cur_enemy = enemy_head;
+    SDL_RendererFlip Flip = SDL_FLIP_NONE;
+    while (tow_head != NULL){
+        if (tow_head->texture != NULL){
+            tow_head->angle = 180;
+            Rect.x = tow_head->x;
+            Rect.y = tow_head->y;
             Rect.w = BLOCK_WIDTH;
             Rect.h = BLOCK_HEIGHT;
-            SDL_RenderCopy(Renderer, head->texture, NULL, &Rect);
+            while(cur_enemy != NULL){
+                if (pow(tow_head->x - cur_enemy->x, 2) + pow(tow_head->y - cur_enemy->y, 2) <= pow(tow_head->radius, 2)){
+                    if (cur_enemy->x - tow_head->x == 0 & cur_enemy->y - tow_head->y > 0) tow_head->angle = 90;
+                    else if (cur_enemy->x - tow_head->x == 0 & cur_enemy->y - tow_head->y < 0) tow_head->angle = -90;
+                    else tow_head->angle = atan((cur_enemy->y - tow_head->y) / (cur_enemy->x - tow_head->x));
+                    printf("%f\n", tow_head->angle);
+                }
+                cur_enemy = cur_enemy->next;
+            }
+            cur_enemy = enemy_head;
+            SDL_RenderCopyEx(Renderer, tow_head->texture, NULL, &Rect, tow_head->angle, NULL, Flip);
         }
-        head = head->next;
+        tow_head = tow_head->next;
     }
 }
 
@@ -193,6 +206,7 @@ tower* createTower(void){
     new_tower->damage = 15;
     new_tower->level = 0;
     new_tower->cost = 40;
+    new_tower->angle = 180;
     new_tower->texture = NULL;
     return new_tower;
 }

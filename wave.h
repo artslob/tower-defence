@@ -16,6 +16,12 @@ enum WavePosition{
     POS_DOWN
 };
 
+enum Directiom{
+    MOV_UP,
+    MOV_DOWN,
+    MOV_RIGHT
+};
+
 typedef struct points{
     int pos_x_1;
     int pos_y_1;

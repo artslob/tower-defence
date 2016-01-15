@@ -48,7 +48,7 @@ int game(SDL_Renderer* Renderer, block* BGhead){
         enemyEnterCave(enemy_head, points_up, &HealthPoints);
         renderEnemies(Renderer, enemy_head, frame / 17);
         showHPbar(Renderer, enemy_head);
-        renderTowers(tow_head, Renderer);
+        renderTowers(tow_head, enemy_head, Renderer);
         showTowerUpgradeMenu(choosedTowerPoint, Renderer, tow_textures, Gold);
 
 
