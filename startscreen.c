@@ -138,8 +138,8 @@ void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton
     volumeButton->mouseOutside_volOff = getTextureFromPath("BMPimages/Icons/volumeOffOutside.png", Renderer);
 }
 
-SDL_Texture* loadTextTexture(char* texturePath, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* renderer){
-    SDL_Surface* textSurface = TTF_RenderText_Blended(Font, texturePath, textColor);
+SDL_Texture* loadTextTexture(char* string, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* renderer){
+    SDL_Surface* textSurface = TTF_RenderText_Blended(Font, string, textColor);
     SDL_Texture* texture = NULL;
     if (textSurface == NULL){
         prError("Unable to create texture from rendered text");

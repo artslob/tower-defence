@@ -52,6 +52,7 @@ typedef struct enemy{
     float Max_health;
     float health;
     int angle;
+    int price;
     int isAlive;
     int inCave;
     int level;
@@ -69,20 +70,12 @@ typedef struct sprites_enemy{
     SDL_Texture* sprite_enemy5;
     SDL_Texture* sprite_enemy6;
     SDL_Texture* sprite_enemy7;
-    SDL_Texture* sprite_enemy8;
-    SDL_Texture* sprite_enemy9;
-    SDL_Texture* sprite_enemy10;
-    SDL_Texture* sprite_enemy11;
-    SDL_Texture* sprite_enemy12;
-    SDL_Texture* sprite_enemy13;
-    SDL_Texture* sprite_enemy14;
-    SDL_Texture* sprite_enemy15;
 }sprites_enemy;
 
 enemy* createEnemy(SDL_Texture*);
 void add_enemy(enemy**, SDL_Texture*);
 sprites_enemy* init_sprites_enemy(SDL_Renderer*);
-void createListEnemy(enemy**, SDL_Renderer*);
+void createListEnemy(enemy**, SDL_Renderer*, sprites_enemy*);
 void moveEnemies(enemy*,points*, points*);
 void renderEnemies(SDL_Renderer*, enemy*, int);
 int check_point(enemy*, points*);

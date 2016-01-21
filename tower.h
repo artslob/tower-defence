@@ -11,17 +11,18 @@
 #include "wave.h"
 
 #define COUNT_TOWER 5
+#define PI 3.14159265
 
 typedef struct tower{
     SDL_Texture* texture;
-    float speed;
+    int speed;
     double angle;
     int damage;
     double radius;
     int level;
     int cost;
-    float x;
-    float y;
+    int x;
+    int y;
     struct tower* next;
 }tower;
 

@@ -12,10 +12,15 @@ tower* clickedOnTowerPosition(tower* head, int x, int y){
     return NULL;
 }
 
-void renderTowers(tower* tow_head, enemy* enemy_head, SDL_Renderer* Renderer){
+void renderTowersAndShoot(tower* tow_head, enemy* enemy_head, SDL_Renderer* Renderer, int* Gold, int frames){
     SDL_Rect Rect;
     enemy* cur_enemy = enemy_head;
+    enemy* enemy_for_shoot = NULL;
     SDL_RendererFlip Flip = SDL_FLIP_NONE;
+
+    double towx, towy, enx, eny;
+    double delta_x, delta_y, radius, highest_radius, righter;
+
     while (tow_head != NULL){
         if (tow_head->texture != NULL){
             tow_head->angle = 180;
@@ -23,19 +28,59 @@ void renderTowers(tower* tow_head, enemy* enemy_head, SDL_Renderer* Renderer){
             Rect.y = tow_head->y;
             Rect.w = BLOCK_WIDTH;
             Rect.h = BLOCK_HEIGHT;
+
+            towx = tow_head->x + BLOCK_WIDTH / 2;
+            towy = tow_head->y + BLOCK_HEIGHT / 2;
+
+            highest_radius = 0;
+            righter = 0;
+
             while(cur_enemy != NULL){
-                if (pow(tow_head->x - cur_enemy->x, 2) + pow(tow_head->y - cur_enemy->y, 2) <= pow(tow_head->radius, 2)){
-                    if (cur_enemy->x - tow_head->x == 0 & cur_enemy->y - tow_head->y > 0) tow_head->angle = 90;
-                    else if (cur_enemy->x - tow_head->x == 0 & cur_enemy->y - tow_head->y < 0) tow_head->angle = -90;
-                    else tow_head->angle = atan((cur_enemy->y - tow_head->y) / (cur_enemy->x - tow_head->x));
-                    printf("%f\n", tow_head->angle);
+                enx = cur_enemy->x + BLOCK_WIDTH / 2;
+                eny = cur_enemy->y + BLOCK_HEIGHT / 2;
+
+                delta_x = towx - enx;
+                delta_y = towy - eny;
+                radius = sqrt(pow(delta_x, 2) + pow(delta_y, 2));
+
+
+                if (cur_enemy->isAlive == 1 && radius <= tow_head->radius && righter <= enx ){
+                    highest_radius = radius;
+                    righter = enx;
+                    enemy_for_shoot = cur_enemy;
+
+                    if (enx - towx == 0 & eny - towy > 0) tow_head->angle = 90;
+                    else if (enx - towx == 0 & eny - towy < 0) tow_head->angle = -90;
+                    else tow_head->angle = atan((eny - towy) / (enx - towx)) * 180 / PI;
+                    if (enx - towx < 0) tow_head->angle += 180;
                 }
                 cur_enemy = cur_enemy->next;
             }
             cur_enemy = enemy_head;
             SDL_RenderCopyEx(Renderer, tow_head->texture, NULL, &Rect, tow_head->angle, NULL, Flip);
+            if (enemy_for_shoot != NULL) renderShootingInEnemy(Renderer, enemy_for_shoot, tow_head, Gold, frames);
         }
         tow_head = tow_head->next;
+        enemy_for_shoot = NULL;
+    }
+}
+
+void renderShootingInEnemy(SDL_Renderer* Renderer, enemy* cur_enemy, tower* cur_tower, int* Gold, int frames){
+    int towx = cur_tower->x + BLOCK_WIDTH / 2;
+    int towy = cur_tower->y + BLOCK_HEIGHT / 2;
+    int enx = cur_enemy->x + BLOCK_WIDTH / 2;
+    int eny = cur_enemy->y + BLOCK_HEIGHT / 2;
+
+    SDL_SetRenderDrawColor(Renderer, 0xFF, 0x00, 0x00, 0xFF);
+
+    if (frames / cur_tower->speed == 0){
+        SDL_RenderDrawLine(Renderer, towx, towy, enx, eny);
+        cur_enemy->health -= cur_tower->damage;
+    }
+
+    if (cur_enemy->health <= 0){
+        cur_enemy->isAlive = 0;
+        *Gold += cur_enemy->price;
     }
 }
 
@@ -110,21 +155,20 @@ void showTowerUpgradeMenu(tower* cur_tower, SDL_Renderer* Renderer, towerTexture
     SDL_Rect towRect;
     SDL_Rect destRect;
     if (cur_tower != NULL){
-        towRect.x = cur_tower->x - BLOCK_WIDTH / 2;
+        if (cur_tower->level == 0) towRect.x = cur_tower->x;
+        else towRect.x = cur_tower->x - BLOCK_WIDTH / 2;
         towRect.y = cur_tower->y - BLOCK_HEIGHT - 5;
         towRect.w = BLOCK_WIDTH;
         towRect.h = BLOCK_HEIGHT;
 
-        destRect.x = cur_tower->x + BLOCK_WIDTH / 2;
+        if (cur_tower->level == 7) destRect.x = cur_tower->x;
+        else destRect.x = cur_tower->x + BLOCK_WIDTH / 2;
         destRect.y = cur_tower->y - BLOCK_HEIGHT - 5;
         destRect.w = BLOCK_WIDTH;
         destRect.h = BLOCK_HEIGHT;
 
-        SDL_SetRenderDrawColor(Renderer, 0x5F, 0x9E, 0xA0, 0xFF);
         switch(cur_tower->level){
         case 0:
-            towRect.x = cur_tower->x;
-            //SDL_RenderFilltowRect(Renderer, &towRect);
             SDL_RenderCopy(Renderer, tow_textures->textureTowerOne, NULL, &towRect);
             break;
         case 1:
@@ -152,10 +196,12 @@ void showTowerUpgradeMenu(tower* cur_tower, SDL_Renderer* Renderer, towerTexture
             SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
             break;
         case 7:
-            destRect.x = cur_tower->x;
             SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
             break;
         }
+        SDL_SetRenderDrawColor(Renderer, 0x80, 0x80, 0x80, 0x90);
+        SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
+        if (cur_tower->cost * 5 / 4 > gold & cur_tower->level != 7) SDL_RenderFillRect(Renderer, &towRect);
     }
 }
 
@@ -202,8 +248,8 @@ tower* createTower(void){
     tower* new_tower = malloc(sizeof(tower));
     new_tower->next = NULL;
     new_tower->radius = 5 * BLOCK_WIDTH / 2;
-    new_tower->speed = 1;
-    new_tower->damage = 15;
+    new_tower->speed = 25;
+    new_tower->damage = 5;
     new_tower->level = 0;
     new_tower->cost = 40;
     new_tower->angle = 180;

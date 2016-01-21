@@ -27,7 +27,7 @@ int init(SDL_Window** window, SDL_Renderer** renderer){
                 if (TTF_Init() == -1){
                     printf("Unable to initialize SDL_ttf: %s \n", TTF_GetError());
                 }
-                if( !(IMG_Init(imgFlags) & imgFlags) )
+                if(!(IMG_Init(imgFlags) & imgFlags))
                 {
                     printf("Unable to initialize SDL_image: %s \n", IMG_GetError());
                     success = 0;
@@ -43,14 +43,12 @@ int init(SDL_Window** window, SDL_Renderer** renderer){
 }
 
 void close(SDL_Renderer** renderer, SDL_Window** window){
+    Mix_HaltMusic();
     SDL_DestroyRenderer(*renderer);
     //*renderer = NULL;
 
     SDL_DestroyWindow(*window);
     //*window = NULL;
-
-    //Quit SDL subsystems
-    //SDL_Delay(7000);
 
     Mix_Quit();
     IMG_Quit();

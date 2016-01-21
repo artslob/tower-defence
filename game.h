@@ -6,7 +6,7 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
-#include "bg.h"
+#include "main.h"
 #include "startscreen.h"
 #include "wave.h"
 #include "tower.h"
@@ -16,6 +16,7 @@
 
 
 int game(SDL_Renderer*, block*);
+SDL_Texture* getTextureFromInt(int number, char* buff, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* Renderer);
 
 
 #endif // GAME_H

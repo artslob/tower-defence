@@ -9,24 +9,11 @@
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 
+#include "main.h"
+
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
-enum GameStates{
-    IN_MENU,
-    START,
-    IN_GAME,
-    EXIT
-};
-
-enum MouseStates{
-    INSIDE_START,
-    INSIDE_EXIT,
-    INSIDE_VOLUME,
-    PRESSED_START,
-    PRESSED_EXIT,
-    PRESSED_VOLUME
-};
 
 typedef struct ButtonMenu{
     SDL_Rect Rect;

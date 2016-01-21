@@ -7,20 +7,77 @@ SDL_Renderer* Renderer = NULL;
 
 /*  */
 int main(int argc, char* args[]){
-    block* head = NULL;
+    block* block_head = NULL;
     int state = 0;
 
     if (init(&Window, &Renderer)){
         SDL_ShowCursor(0);
-        BG_list_create(Renderer, &head);
-        state = menu(Renderer);
+        BG_list_create(Renderer, &block_head);
 
+        state = menu(Renderer);
         if (state == START){
-            game(Renderer, head);
+            state = game(Renderer, block_head);
+            playLastScene(Renderer, Window, block_head, state);
         }
     }
     close(&Renderer, &Window);
     return 0;
+}
+
+void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, int state){
+    SDL_Texture* lastWords = NULL;
+    SDL_Color textColor = {255, 0, 0};
+    TTF_Font* Font = TTF_OpenFont("TTFtext/GOST-type-B-Standard.ttf", 1000);
+    SDL_Rect textRect = {SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2};
+
+    int blend = 0;
+    SDL_Rect bgRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_Surface* oldSurface = SDL_GetWindowSurface(Window);
+    SDL_Texture* oldTexture = SDL_CreateTextureFromSurface(Renderer, oldSurface);
+
+    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.png", Renderer);
+    int new_state = IN_GAME;
+    SDL_Event event;
+
+    int FPS = 70;
+    int timer = 0;
+    int frame = 0;
+
+    if (state == WIN){
+        lastWords = loadTextTexture("YOU WIN", Font, textColor, Renderer);
+    }
+    if (state == GAME_OVER){
+        lastWords = loadTextTexture("YOU LOST", Font, textColor, Renderer);
+    }
+    if (state != EXIT){
+        while (new_state != EXIT){
+            timer = SDL_GetTicks();
+            while (SDL_PollEvent(&event)){
+                if (event.type == SDL_QUIT | event.type == SDL_MOUSEBUTTONDOWN){
+                    new_state = EXIT;
+                }
+            }
+            SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(Renderer);
+
+            BG_list_render(Renderer, block_head);
+
+            SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(Renderer, 0, 0, 0, blend);
+            SDL_RenderFillRect(Renderer, &bgRect);
+
+            SDL_RenderCopy(Renderer, lastWords, NULL, &textRect);
+
+            showCursor(Renderer, cursor_texture);
+            SDL_RenderPresent(Renderer);
+
+            if (blend < 253 & frame % 2 == 0) blend += 2;
+
+            frame++;
+            waitForFps(timer, FPS);
+            getFps();
+        }
+    }
 }
 
 SDL_Texture* getTextureFromPath(char* path, SDL_Renderer* Renderer){
@@ -38,8 +95,8 @@ SDL_Texture* getTextureFromPath(char* path, SDL_Renderer* Renderer){
 }
 
 void showCursor(SDL_Renderer* Renderer, SDL_Texture* cursor_texture){
-    static int x, y;
-    static SDL_Rect cursorRect;
+    int x, y;
+    SDL_Rect cursorRect;
     SDL_GetMouseState(&x, &y);
     cursorRect.x = x;
     cursorRect.y = y;
@@ -78,28 +135,3 @@ void waitForFps(int timer, int fps){
 void prError(char* str){
     printf("%s! %s\n", str, SDL_GetError());
 }
-//        while (quit != 1){
-//            timer = SDL_GetTicks();
-//            while( SDL_PollEvent( &e ) != 0 )
-//            {
-//                if( e.type == SDL_QUIT )
-//                {
-//                    quit = 1;
-//                }
-//            }
-//            SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-//            SDL_RenderClear(Renderer);
-//
-//            BG_list_render(Renderer, head);
-//
-//            SDL_RenderPresent(Renderer);
-//
-//            getFps();
-//            //waitForFps(timer, 16.666);
-//        }
-//    }
-
-//            currentTime = SDL_GetTicks()/1000;
-//            itoa(currentTime, timeStr, 10);
-//            timeTexture = loadTextTexture(timeStr, Font, timeColor, Renderer);
-//            SDL_RenderCopy(Renderer, timeTexture, NULL, &timeRect);

@@ -16,7 +16,6 @@ void BG_list_render(SDL_Renderer* Renderer, block* head){
     }
 }
 
-
 void BG_list_create(SDL_Renderer* Renderer, block** head){
     int i, j;
     block* end = NULL;

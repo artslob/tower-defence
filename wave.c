@@ -7,8 +7,56 @@ enemy* createEnemy(SDL_Texture* texture){
     return newEnemy;
 }
 
-void createListEnemy(enemy** head, SDL_Renderer* Renderer){
-    sprites_enemy* sprites = init_sprites_enemy(Renderer);
+int makeNewWaveIfAllIsDead(enemy* head, sprites_enemy* en_sprites){
+    enemy* cur_enemy = head;
+    int count = 0;
+    while(cur_enemy != NULL){
+        if (cur_enemy->isAlive == 1 && cur_enemy->inCave != 1) return 0;
+        cur_enemy = cur_enemy->next;
+    }
+    cur_enemy = head;
+    while (cur_enemy != NULL){
+        cur_enemy->Max_health *= 6 / 5;
+        cur_enemy->health = cur_enemy->Max_health;
+        cur_enemy->inCave = 0;
+        cur_enemy->isAlive = 1;
+        cur_enemy->level++;
+        cur_enemy->price *= 2;
+        if (count < COUNT_IN_WAVE / 2){
+            cur_enemy->y = 40;
+            cur_enemy->x = -320 + BLOCK_WIDTH * 3 / 2 * count;
+        }
+        else{
+            cur_enemy->y = 400;
+            cur_enemy->x = -630 + BLOCK_WIDTH * 3 / 2 * count;
+        }
+        count++;
+        switch(cur_enemy->level){
+        case 2:
+            cur_enemy->textureEnemy = en_sprites->sprite_enemy2;
+            break;
+        case 3:
+            cur_enemy->textureEnemy = en_sprites->sprite_enemy3;
+            break;
+        case 4:
+            cur_enemy->textureEnemy = en_sprites->sprite_enemy4;
+            break;
+        case 5:
+            cur_enemy->textureEnemy = en_sprites->sprite_enemy5;
+            break;
+        case 6:
+            cur_enemy->textureEnemy = en_sprites->sprite_enemy6;
+            break;
+        case 7:
+            cur_enemy->textureEnemy = en_sprites->sprite_enemy7;
+            break;
+        }
+        cur_enemy = cur_enemy->next;
+    }
+    return 1;
+}
+
+void createListEnemy(enemy** head, SDL_Renderer* Renderer, sprites_enemy* sprites){
     enemy* current_enemy = NULL;
     int count;
 
@@ -17,12 +65,13 @@ void createListEnemy(enemy** head, SDL_Renderer* Renderer){
     }
     current_enemy = *head;
     for (count = 0; count < COUNT_IN_WAVE; count++){
-        current_enemy->Max_health = 100;
-        current_enemy->health = 100;
+        current_enemy->Max_health = 600;
+        current_enemy->health = 600;
         current_enemy->isAlive = 1;
         current_enemy->level = 1;
         current_enemy->angle = MOV_RIGHT;
         current_enemy->inCave = 0;
+        current_enemy->price = 4;
         if (count < COUNT_IN_WAVE / 2){
             current_enemy->position = POS_UP;
             current_enemy->y = 40;
@@ -43,7 +92,10 @@ void moveEnemies(enemy* head, points* points_up, points* points_down){
     enemy* current_enemy = head;
     for (count = 0; count < COUNT_IN_WAVE; count++){
         if (current_enemy->position == POS_UP){
-            if (current_enemy->y == points_up->pos_y_1) current_enemy->x++;
+            if (current_enemy->y == points_up->pos_y_1) {
+                current_enemy->angle = MOV_RIGHT;
+                current_enemy->x++;
+            }
             if (current_enemy->x == points_up->pos_x_2) {
                 current_enemy->y++;
                 current_enemy->angle = MOV_DOWN;
@@ -144,7 +196,7 @@ void showHPbar(SDL_Renderer* Renderer, enemy* head){
 
 void enemyEnterCave(enemy* head, points* points, int* hp){
     while(head != NULL){
-        if (head->x >= points->pos_x_11) {
+        if (head->x >= points->pos_x_11 & head->isAlive == 1) {
             head->isAlive = 0;
             if (*hp > 0 & head->inCave == 0){
                 head->inCave = 1;
