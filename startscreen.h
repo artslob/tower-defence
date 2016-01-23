@@ -14,7 +14,6 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
-
 typedef struct ButtonMenu{
     SDL_Rect Rect;
     SDL_Texture* mouseInside;

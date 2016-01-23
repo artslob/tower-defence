@@ -2,14 +2,14 @@
 
 int menu(SDL_Renderer* Renderer){
     SDL_Event event;
-    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.png", Renderer);
-
+    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.bmp", Renderer);
 
     ButtonMenu* startButton = malloc(sizeof(ButtonMenu));
     ButtonMenu* exitButton = malloc(sizeof(ButtonMenu));
     VolumeMenu* volumeButton = malloc(sizeof(VolumeMenu));
 
     TTF_Font* Font = TTF_OpenFont("TTFtext/GOST-type-B-Standard.ttf", 1000);
+
     Mix_Music* musicMenu = Mix_LoadMUS("MIXmusic/space.flac");
 
     SDL_Texture* startTexture = NULL;
@@ -22,10 +22,10 @@ int menu(SDL_Renderer* Renderer){
 
     SDL_Rect menuRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
-    SDL_Texture* menu_bg_1 = getTextureFromPath("BMPimages/Parallax/menu_bg_1.png", Renderer);
-    SDL_Texture* menu_bg_2 = getTextureFromPath("BMPimages/Parallax/menu_bg_2.png", Renderer);
-    SDL_Texture* menu_bg_3 = getTextureFromPath("BMPimages/Parallax/menu_bg_3.png", Renderer);
-    SDL_Texture* menu_bg_4 = getTextureFromPath("BMPimages/Parallax/menu_bg_4.png", Renderer);
+    SDL_Texture* menu_bg_1 = getTextureFromPath("BMPimages/Parallax/menu_bg_1.bmp", Renderer);
+    SDL_Texture* menu_bg_2 = getTextureFromPath("BMPimages/Parallax/menu_bg_2.bmp", Renderer);
+    SDL_Texture* menu_bg_3 = getTextureFromPath("BMPimages/Parallax/menu_bg_3.bmp", Renderer);
+    SDL_Texture* menu_bg_4 = getTextureFromPath("BMPimages/Parallax/menu_bg_4.bmp", Renderer);
     int displace_menu_bg_2 = 0;
     int displace_menu_bg_3 = 0;
     int displace_menu_bg_4 = 0;
@@ -48,13 +48,13 @@ int menu(SDL_Renderer* Renderer){
             }
             if (event.type == SDL_MOUSEMOTION){
                 SDL_GetMouseState(&x, &y);
-                if (isInside(x, y, startButton)) startTexture = startButton->mouseInside;
+                if (isInsideRect(x, y, startButton->Rect)) startTexture = startButton->mouseInside;
                 else startTexture = startButton->mouseOutside;
 
-                if (isInside(x, y, exitButton)) exitTexture = exitButton->mouseInside;
+                if (isInsideRect(x, y, exitButton->Rect)) exitTexture = exitButton->mouseInside;
                 else exitTexture = exitButton->mouseOutside;
 
-                if (isInside(x, y, volumeButton)){
+                if (isInsideRect(x, y, volumeButton->Rect)){
                     if (volumeOn) volumeTexture = volumeButton->mouseInside_volOn;
                     else volumeTexture = volumeButton->mouseInside_volOff;
                 }
@@ -65,11 +65,11 @@ int menu(SDL_Renderer* Renderer){
             }
             if (event.type == SDL_MOUSEBUTTONDOWN){
                 SDL_GetMouseState(&x, &y);
-                if (isInside(x, y, startButton)) state = START;
+                if (isInsideRect(x, y, startButton->Rect)) state = START;
 
-                if (isInside(x, y, exitButton)) state = EXIT;
+                if (isInsideRect(x, y, exitButton->Rect)) state = EXIT;
 
-                if (isInside(x, y, volumeButton)){
+                if (isInsideRect(x, y, volumeButton->Rect)){
                     if (volumeOn){
                         volumeOn = 0;
                         Mix_PauseMusic();
@@ -102,12 +102,6 @@ int menu(SDL_Renderer* Renderer){
         waitForFps(timer, 35);
     }
     return state;
-}
-
-int isInside(int x, int y, SDL_Rect* Rect){
-    if (Rect->x <= x && x <= Rect->x + Rect->w && Rect->y <= y && y <= Rect->y + Rect->h)
-        return 1;
-    else return 0;
 }
 
 void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton, ButtonMenu* exitButton, VolumeMenu* volumeButton){

@@ -15,14 +15,13 @@
 
 typedef struct tower{
     SDL_Texture* texture;
-    int speed;
-    double angle;
-    int damage;
-    double radius;
+    float damage;
     int level;
     int cost;
     int x;
     int y;
+    int angle;
+    int radius;
     struct tower* next;
 }tower;
 

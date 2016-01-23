@@ -16,12 +16,12 @@ int makeNewWaveIfAllIsDead(enemy* head, sprites_enemy* en_sprites){
     }
     cur_enemy = head;
     while (cur_enemy != NULL){
-        cur_enemy->Max_health *= 6 / 5;
+        cur_enemy->Max_health *= 20 / 10;
         cur_enemy->health = cur_enemy->Max_health;
         cur_enemy->inCave = 0;
         cur_enemy->isAlive = 1;
         cur_enemy->level++;
-        cur_enemy->price *= 2;
+        cur_enemy->price += 10;
         if (count < COUNT_IN_WAVE / 2){
             cur_enemy->y = 40;
             cur_enemy->x = -320 + BLOCK_WIDTH * 3 / 2 * count;
@@ -65,13 +65,13 @@ void createListEnemy(enemy** head, SDL_Renderer* Renderer, sprites_enemy* sprite
     }
     current_enemy = *head;
     for (count = 0; count < COUNT_IN_WAVE; count++){
-        current_enemy->Max_health = 600;
-        current_enemy->health = 600;
+        current_enemy->Max_health = 180;
+        current_enemy->health = 180;
         current_enemy->isAlive = 1;
         current_enemy->level = 1;
         current_enemy->angle = MOV_RIGHT;
         current_enemy->inCave = 0;
-        current_enemy->price = 4;
+        current_enemy->price = 20;
         if (count < COUNT_IN_WAVE / 2){
             current_enemy->position = POS_UP;
             current_enemy->y = 40;

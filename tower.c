@@ -12,7 +12,7 @@ tower* clickedOnTowerPosition(tower* head, int x, int y){
     return NULL;
 }
 
-void renderTowersAndShoot(tower* tow_head, enemy* enemy_head, SDL_Renderer* Renderer, int* Gold, int frames){
+void renderTowersAndShoot(tower* tow_head, enemy* enemy_head, SDL_Renderer* Renderer, int* Gold){
     SDL_Rect Rect;
     enemy* cur_enemy = enemy_head;
     enemy* enemy_for_shoot = NULL;
@@ -58,14 +58,14 @@ void renderTowersAndShoot(tower* tow_head, enemy* enemy_head, SDL_Renderer* Rend
             }
             cur_enemy = enemy_head;
             SDL_RenderCopyEx(Renderer, tow_head->texture, NULL, &Rect, tow_head->angle, NULL, Flip);
-            if (enemy_for_shoot != NULL) renderShootingInEnemy(Renderer, enemy_for_shoot, tow_head, Gold, frames);
+            if (enemy_for_shoot != NULL) renderShootingInEnemy(Renderer, enemy_for_shoot, tow_head, Gold);
         }
         tow_head = tow_head->next;
         enemy_for_shoot = NULL;
     }
 }
 
-void renderShootingInEnemy(SDL_Renderer* Renderer, enemy* cur_enemy, tower* cur_tower, int* Gold, int frames){
+void renderShootingInEnemy(SDL_Renderer* Renderer, enemy* cur_enemy, tower* cur_tower, int* Gold){
     int towx = cur_tower->x + BLOCK_WIDTH / 2;
     int towy = cur_tower->y + BLOCK_HEIGHT / 2;
     int enx = cur_enemy->x + BLOCK_WIDTH / 2;
@@ -73,10 +73,8 @@ void renderShootingInEnemy(SDL_Renderer* Renderer, enemy* cur_enemy, tower* cur_
 
     SDL_SetRenderDrawColor(Renderer, 0xFF, 0x00, 0x00, 0xFF);
 
-    if (frames / cur_tower->speed == 0){
-        SDL_RenderDrawLine(Renderer, towx, towy, enx, eny);
-        cur_enemy->health -= cur_tower->damage;
-    }
+    SDL_RenderDrawLine(Renderer, towx, towy, enx, eny);
+    cur_enemy->health -= cur_tower->damage;
 
     if (cur_enemy->health <= 0){
         cur_enemy->isAlive = 0;
@@ -89,7 +87,7 @@ void clickedUpgradeMenu(tower* cur_tower, towerTextures* tow_textures, int x, in
         if (cur_tower->level == 0){
             if (cur_tower->x <= x && x <= cur_tower->x + BLOCK_WIDTH &&
             cur_tower->y - BLOCK_HEIGHT - 5 <= y && y <= cur_tower->y - 5){
-                upgradeTower(cur_tower, tow_textures, gold);
+                if (cur_tower->cost <= *gold) upgradeTower(cur_tower, tow_textures, gold);
             }
         }
         else if (cur_tower->level == 7){
@@ -101,7 +99,7 @@ void clickedUpgradeMenu(tower* cur_tower, towerTextures* tow_textures, int x, in
         else if (1 <= cur_tower->level & cur_tower->level <= 6){
             if (cur_tower->x - BLOCK_WIDTH / 2 <= x && x <= cur_tower->x + BLOCK_WIDTH / 2 &&
             cur_tower->y - BLOCK_HEIGHT - 5 <= y && y <= cur_tower->y - 5){
-                upgradeTower(cur_tower, tow_textures, gold);
+                if (cur_tower->cost <= *gold) upgradeTower(cur_tower, tow_textures, gold);
             }
             if (cur_tower->x + BLOCK_WIDTH / 2 <= x && x <= cur_tower->x + BLOCK_WIDTH * 3 / 2 &&
             cur_tower->y - BLOCK_HEIGHT - 5 <= y && y <= cur_tower->y - 5){
@@ -137,18 +135,14 @@ void upgradeTower(tower* cur_tower, towerTextures* tow_textures, int* gold){
         break;
     }
     cur_tower->cost = cur_tower->cost * 5 / 4;
-    cur_tower->damage = cur_tower->damage * 5 / 4;
+    cur_tower->damage = cur_tower->damage * 6 / 4;
     cur_tower->level++;
-    cur_tower->radius += 10;
+    cur_tower->radius += 5;
 }
 
 void destroyTower(tower* cur_tower, towerTextures* tow_textures, int* gold){
-    *gold += cur_tower->cost * 3;
-    cur_tower->cost = 40;
-    cur_tower->damage = 15;
-    cur_tower->level = 0;
-    cur_tower->radius = 5 * BLOCK_WIDTH / 2;
-    cur_tower->texture = NULL;
+    *gold += cur_tower->cost / 2;
+    makeStartStatesForTower(cur_tower);
 }
 
 void showTowerUpgradeMenu(tower* cur_tower, SDL_Renderer* Renderer, towerTextures* tow_textures, int gold){
@@ -201,7 +195,7 @@ void showTowerUpgradeMenu(tower* cur_tower, SDL_Renderer* Renderer, towerTexture
         }
         SDL_SetRenderDrawColor(Renderer, 0x80, 0x80, 0x80, 0x90);
         SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
-        if (cur_tower->cost * 5 / 4 > gold & cur_tower->level != 7) SDL_RenderFillRect(Renderer, &towRect);
+        if (cur_tower->cost > gold & cur_tower->level != 7) SDL_RenderFillRect(Renderer, &towRect);
     }
 }
 
@@ -244,16 +238,19 @@ void addTower(tower** head){
     else *head = new_tower;
 }
 
+void makeStartStatesForTower(tower* cur_tower){
+    cur_tower->radius = 5 * BLOCK_WIDTH / 2;
+    cur_tower->damage = 2,5;
+    cur_tower->level = 0;
+    cur_tower->cost = 50;
+    cur_tower->angle = 180;
+    cur_tower->texture = NULL;
+}
+
 tower* createTower(void){
     tower* new_tower = malloc(sizeof(tower));
     new_tower->next = NULL;
-    new_tower->radius = 5 * BLOCK_WIDTH / 2;
-    new_tower->speed = 25;
-    new_tower->damage = 5;
-    new_tower->level = 0;
-    new_tower->cost = 40;
-    new_tower->angle = 180;
-    new_tower->texture = NULL;
+    makeStartStatesForTower(new_tower);
     return new_tower;
 }
 

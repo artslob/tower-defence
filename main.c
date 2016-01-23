@@ -35,7 +35,7 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
     SDL_Surface* oldSurface = SDL_GetWindowSurface(Window);
     SDL_Texture* oldTexture = SDL_CreateTextureFromSurface(Renderer, oldSurface);
 
-    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.png", Renderer);
+    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.bmp", Renderer);
     int new_state = IN_GAME;
     SDL_Event event;
 
@@ -50,6 +50,7 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
         lastWords = loadTextTexture("YOU LOST", Font, textColor, Renderer);
     }
     if (state != EXIT){
+        Mix_FadeOutMusic(5000);
         while (new_state != EXIT){
             timer = SDL_GetTicks();
             while (SDL_PollEvent(&event)){
@@ -61,7 +62,6 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
             SDL_RenderClear(Renderer);
 
             BG_list_render(Renderer, block_head);
-
             SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
             SDL_SetRenderDrawColor(Renderer, 0, 0, 0, blend);
             SDL_RenderFillRect(Renderer, &bgRect);
@@ -71,7 +71,7 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
             showCursor(Renderer, cursor_texture);
             SDL_RenderPresent(Renderer);
 
-            if (blend < 253 & frame % 2 == 0) blend += 2;
+            if (blend < 253) blend += 1;
 
             frame++;
             waitForFps(timer, FPS);
@@ -92,6 +92,11 @@ SDL_Texture* getTextureFromPath(char* path, SDL_Renderer* Renderer){
         SDL_FreeSurface(loadedSurface);
     }
     return newTexture;
+}
+
+int isInsideRect(int x, int y, SDL_Rect Rect){
+    if (Rect.x <= x & x <= Rect.x + Rect.w & Rect.y <= y & y <= Rect.y + Rect.h) return 1;
+    else return 0;
 }
 
 void showCursor(SDL_Renderer* Renderer, SDL_Texture* cursor_texture){
