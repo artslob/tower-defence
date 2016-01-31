@@ -11,6 +11,9 @@
 #define COUNT_IN_WAVE 10
 #define PICT_SIZE 48
 
+#define ENEMY_COUNT_SPRITES 7
+#define POINTS_COUNT 11
+
 enum WavePosition{
     POS_UP,
     POS_DOWN
@@ -22,32 +25,12 @@ enum Directiom{
     MOV_RIGHT
 };
 
-typedef struct points{
-    int pos_x_1;
-    int pos_y_1;
-    int pos_x_2;
-    int pos_y_2;
-    int pos_x_3;
-    int pos_y_3;
-    int pos_x_4;
-    int pos_y_4;
-    int pos_x_5;
-    int pos_y_5;
-    int pos_x_6;
-    int pos_y_6;
-    int pos_x_7;
-    int pos_y_7;
-    int pos_x_8;
-    int pos_y_8;
-    int pos_x_9;
-    int pos_y_9;
-    int pos_x_10;
-    int pos_y_10;
-    int pos_x_11;
-    int pos_y_11;
-}points;
+typedef struct point{
+    int x;
+    int y;
+}point;
 
-typedef struct enemy{
+ typedef struct enemy{
     SDL_Texture* textureEnemy;
     float Max_health;
     float health;
@@ -62,24 +45,14 @@ typedef struct enemy{
     struct enemy* next;
 }enemy;
 
-typedef struct sprites_enemy{
-    SDL_Texture* sprite_enemy1;
-    SDL_Texture* sprite_enemy2;
-    SDL_Texture* sprite_enemy3;
-    SDL_Texture* sprite_enemy4;
-    SDL_Texture* sprite_enemy5;
-    SDL_Texture* sprite_enemy6;
-    SDL_Texture* sprite_enemy7;
-}sprites_enemy;
-
 enemy* createEnemy(SDL_Texture*);
 void add_enemy(enemy**, SDL_Texture*);
-sprites_enemy* init_sprites_enemy(SDL_Renderer*);
-void createListEnemy(enemy**, SDL_Renderer*, sprites_enemy*);
-void moveEnemies(enemy*,points*, points*);
+void createListEnemy(enemy** head, SDL_Renderer* Renderer, SDL_Texture* enemy_sprites[ENEMY_COUNT_SPRITES]);
+void moveEnemies(enemy* head, point points_up[POINTS_COUNT], point points_down[POINTS_COUNT]);
 void renderEnemies(SDL_Renderer*, enemy*, int);
-int check_point(enemy*, points*);
-void enemyEnterCave(enemy*, points*, int* hp);
+void moveEnemies(enemy* head, point points_up[POINTS_COUNT], point points_down[POINTS_COUNT]);
+void enemyEnterCave(enemy* head, point array_points[POINTS_COUNT], int* hp);
 void showHPbar(SDL_Renderer*, enemy*);
+point createPoint(int x, int y);
 
 #endif // WAVE_H

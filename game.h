@@ -7,6 +7,7 @@
 #include <SDL_mixer.h>
 
 #include "main.h"
+#include "global.h"
 #include "startscreen.h"
 #include "wave.h"
 #include "tower.h"

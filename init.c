@@ -25,15 +25,15 @@ int init(SDL_Window** window, SDL_Renderer** renderer){
                 int imgFlags = IMG_INIT_PNG;
                 SDL_SetRenderDrawColor(*renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 if (TTF_Init() == -1){
-                    printf("Unable to initialize SDL_ttf: %s \n", TTF_GetError());
+                    sprintf(stderr, "Unable to initialize SDL_ttf: %s \n", TTF_GetError());
                 }
                 if(!(IMG_Init(imgFlags) & imgFlags))
                 {
-                    printf("Unable to initialize SDL_image: %s \n", IMG_GetError());
+                    sprintf(stderr, "Unable to initialize SDL_image: %s \n", IMG_GetError());
                     success = 0;
                 }
                 if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
-                    printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+                    sprintf(stderr, "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
                     success = 0;
                 }
             }
@@ -45,10 +45,8 @@ int init(SDL_Window** window, SDL_Renderer** renderer){
 void close(SDL_Renderer** renderer, SDL_Window** window){
     Mix_HaltMusic();
     SDL_DestroyRenderer(*renderer);
-    //*renderer = NULL;
 
     SDL_DestroyWindow(*window);
-    //*window = NULL;
 
     Mix_Quit();
     IMG_Quit();

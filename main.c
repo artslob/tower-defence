@@ -1,14 +1,12 @@
 #include "global.h"
 
-/* the window be rendering to */
 SDL_Window* Window = NULL;
-/* window renderer */
 SDL_Renderer* Renderer = NULL;
 
 /*  */
 int main(int argc, char* args[]){
     block* block_head = NULL;
-    int state = 0;
+    GameStates state;
 
     if (init(&Window, &Renderer)){
         SDL_ShowCursor(0);
@@ -24,7 +22,7 @@ int main(int argc, char* args[]){
     return 0;
 }
 
-void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, int state){
+void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, GameStates state){
     SDL_Texture* lastWords = NULL;
     SDL_Color textColor = {255, 0, 0};
     TTF_Font* Font = TTF_OpenFont("TTFtext/GOST-type-B-Standard.ttf", 1000);
@@ -36,12 +34,10 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
     SDL_Texture* oldTexture = SDL_CreateTextureFromSurface(Renderer, oldSurface);
 
     SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.bmp", Renderer);
-    int new_state = IN_GAME;
+    GameStates new_state = IN_GAME;
     SDL_Event event;
 
-    int FPS = 70;
-    int timer = 0;
-    int frame = 0;
+    size_t FPS = 70;
 
     if (state == WIN){
         lastWords = loadTextTexture("YOU WIN", Font, textColor, Renderer);
@@ -52,7 +48,6 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
     if (state != EXIT){
         Mix_FadeOutMusic(5000);
         while (new_state != EXIT){
-            timer = SDL_GetTicks();
             while (SDL_PollEvent(&event)){
                 if (event.type == SDL_QUIT | event.type == SDL_MOUSEBUTTONDOWN){
                     new_state = EXIT;
@@ -73,8 +68,7 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
 
             if (blend < 253) blend += 1;
 
-            frame++;
-            waitForFps(timer, FPS);
+            waitForFps(FPS);
             getFps();
         }
     }
@@ -84,10 +78,10 @@ SDL_Texture* getTextureFromPath(char* path, SDL_Renderer* Renderer){
     SDL_Texture* newTexture = NULL;
     SDL_Surface* loadedSurface = NULL;
     if ((loadedSurface = IMG_Load(path)) == NULL)
-        printf("Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
+        sprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
     else{
         if ((newTexture = SDL_CreateTextureFromSurface(Renderer, loadedSurface)) == NULL){
-            printf( "Unable to create texture from %s! SDL Error: %s\n", path, SDL_GetError() );
+            sprintf(stderr, "Unable to create texture from %s! SDL Error: %s\n", path, SDL_GetError() );
         }
         SDL_FreeSurface(loadedSurface);
     }
@@ -111,9 +105,9 @@ void showCursor(SDL_Renderer* Renderer, SDL_Texture* cursor_texture){
 }
 
 void getFps(void){
-    static int frameWindow = 0;
-    static int currentTime1 = 0;
-    static int currentTime2 = 0;
+    static size_t frameWindow = 0;
+    static size_t currentTime1 = 0;
+    static size_t currentTime2 = 0;
     static float fps = 0;
     frameWindow++;
 
@@ -127,16 +121,18 @@ void getFps(void){
     }
 }
 
-void waitForFps(int timer, int fps){
+void waitForFps(size_t fps){
+    static float timer1 = 0;
     static float delta = 0;
     static float time = 0;
     time = (float) 1000 / fps;
-    delta = SDL_GetTicks() - timer;
+    delta = SDL_GetTicks() - timer1;
     if (delta < time){
         SDL_Delay(time - delta);
     }
+    timer1 = SDL_GetTicks();
 }
 
 void prError(char* str){
-    printf("%s! %s\n", str, SDL_GetError());
+    sprintf(stderr, "%s! %s\n", str, SDL_GetError());
 }

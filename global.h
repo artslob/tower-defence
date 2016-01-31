@@ -17,5 +17,15 @@
 #include "startscreen.h"
 #include "tower.h"
 
+typedef enum GameStates{
+    IN_MENU,
+    START,
+    IN_GAME,
+    GAME_OVER,
+    WIN,
+    EXIT
+}GameStates;
+
+
 
 #endif // GLOBAL_H

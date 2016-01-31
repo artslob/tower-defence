@@ -12,35 +12,22 @@ int menu(SDL_Renderer* Renderer){
 
     Mix_Music* musicMenu = Mix_LoadMUS("MIXmusic/space.flac");
 
-    SDL_Texture* startTexture = NULL;
-    SDL_Texture* exitTexture = NULL;
-    SDL_Texture* volumeTexture = NULL;
-
-    int state = IN_MENU;
+    GameStates state = IN_MENU;
     int x, y;
     int volumeOn = 1;
 
     SDL_Rect menuRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 
-    SDL_Texture* menu_bg_1 = getTextureFromPath("BMPimages/Parallax/menu_bg_1.bmp", Renderer);
-    SDL_Texture* menu_bg_2 = getTextureFromPath("BMPimages/Parallax/menu_bg_2.bmp", Renderer);
-    SDL_Texture* menu_bg_3 = getTextureFromPath("BMPimages/Parallax/menu_bg_3.bmp", Renderer);
-    SDL_Texture* menu_bg_4 = getTextureFromPath("BMPimages/Parallax/menu_bg_4.bmp", Renderer);
-    int displace_menu_bg_2 = 0;
-    int displace_menu_bg_3 = 0;
-    int displace_menu_bg_4 = 0;
+    SDL_Texture* array_menu_bg[BG_SPRITES];
+    size_t displace_menu_bg_2 = 0;
+    size_t displace_menu_bg_3 = 0;
+    size_t displace_menu_bg_4 = 0;
 
     Mix_PlayMusic(musicMenu, -1);
     initButtons(Renderer, Font, startButton, exitButton, volumeButton);
-
-    startTexture = startButton->mouseOutside;
-    exitTexture = exitButton->mouseOutside;
-    volumeTexture = volumeButton->mouseOutside_volOn;
-
-    int timer = 0;
+    initMenuBgSprites(Renderer, array_menu_bg);
 
     while(state == IN_MENU){
-        timer = SDL_GetTicks();
         while(SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT){
@@ -48,19 +35,19 @@ int menu(SDL_Renderer* Renderer){
             }
             if (event.type == SDL_MOUSEMOTION){
                 SDL_GetMouseState(&x, &y);
-                if (isInsideRect(x, y, startButton->Rect)) startTexture = startButton->mouseInside;
-                else startTexture = startButton->mouseOutside;
+                if (isInsideRect(x, y, startButton->Rect)) startButton->cur_texture = startButton->mouseInside;
+                else startButton->cur_texture = startButton->mouseOutside;
 
-                if (isInsideRect(x, y, exitButton->Rect)) exitTexture = exitButton->mouseInside;
-                else exitTexture = exitButton->mouseOutside;
+                if (isInsideRect(x, y, exitButton->Rect)) exitButton->cur_texture = exitButton->mouseInside;
+                else exitButton->cur_texture = exitButton->mouseOutside;
 
                 if (isInsideRect(x, y, volumeButton->Rect)){
-                    if (volumeOn) volumeTexture = volumeButton->mouseInside_volOn;
-                    else volumeTexture = volumeButton->mouseInside_volOff;
+                    if (volumeOn) volumeButton->cur_texture = volumeButton->mouseInside_volOn;
+                    else volumeButton->cur_texture = volumeButton->mouseInside_volOff;
                 }
                 else{
-                    if (volumeOn) volumeTexture = volumeButton->mouseOutside_volOn;
-                    else volumeTexture = volumeButton->mouseOutside_volOff;
+                    if (volumeOn) volumeButton->cur_texture = volumeButton->mouseOutside_volOn;
+                    else volumeButton->cur_texture = volumeButton->mouseOutside_volOff;
                 }
             }
             if (event.type == SDL_MOUSEBUTTONDOWN){
@@ -73,12 +60,12 @@ int menu(SDL_Renderer* Renderer){
                     if (volumeOn){
                         volumeOn = 0;
                         Mix_PauseMusic();
-                        volumeTexture = volumeButton->mouseInside_volOff;
+                        volumeButton->cur_texture = volumeButton->mouseInside_volOff;
                     }
                     else{
                         volumeOn = 1;
                         Mix_ResumeMusic();
-                        volumeTexture = volumeButton->mouseInside_volOn;
+                        volumeButton->cur_texture = volumeButton->mouseInside_volOn;
                     }
                 }
             }
@@ -86,22 +73,31 @@ int menu(SDL_Renderer* Renderer){
         SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(Renderer);
 
-        SDL_RenderCopy(Renderer, menu_bg_1, NULL, &menuRect);
-        renderInfinityText(Renderer, menu_bg_2,&displace_menu_bg_2, 544, 2, 1);
-        renderInfinityText(Renderer, menu_bg_3,&displace_menu_bg_3, 544, 2, 2);
-        renderInfinityText(Renderer, menu_bg_4,&displace_menu_bg_4, 544, 2, 3);
+        SDL_RenderCopy(Renderer, array_menu_bg[0], NULL, &menuRect);
+        renderInfinityText(Renderer, array_menu_bg[1], &displace_menu_bg_2, 544, 2, 1);
+        renderInfinityText(Renderer, array_menu_bg[2], &displace_menu_bg_3, 544, 2, 2);
+        renderInfinityText(Renderer, array_menu_bg[3], &displace_menu_bg_4, 544, 2, 3);
 
 
-        SDL_RenderCopy(Renderer, startTexture, NULL, &startButton->Rect);
-        SDL_RenderCopy(Renderer, volumeTexture, NULL, &volumeButton->Rect);
-        SDL_RenderCopy(Renderer, exitTexture, NULL, &exitButton->Rect);
+        SDL_RenderCopy(Renderer, startButton->cur_texture, NULL, &startButton->Rect);
+        SDL_RenderCopy(Renderer, volumeButton->cur_texture, NULL, &volumeButton->Rect);
+        SDL_RenderCopy(Renderer, exitButton->cur_texture, NULL, &exitButton->Rect);
 
         showCursor(Renderer, cursor_texture);
         SDL_RenderPresent(Renderer);
         getFps();
-        waitForFps(timer, 35);
+        waitForFps(35);
     }
     return state;
+}
+
+void initMenuBgSprites(SDL_Renderer* Renderer, SDL_Texture* array[BG_SPRITES]){
+    size_t i;
+    char str_path[40];
+    for (i = 0; i < BG_SPRITES; i++){
+        sprintf(str_path, "BMPimages/Parallax/menu_bg_%d.bmp", i + 1);
+        array[i] = getTextureFromPath(str_path, Renderer);
+    }
 }
 
 void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton, ButtonMenu* exitButton, VolumeMenu* volumeButton){
@@ -114,6 +110,7 @@ void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton
     startButton->Rect.h = 160;
     startButton->mouseInside = loadTextTexture("START", Font, insideColor, Renderer);
     startButton->mouseOutside = loadTextTexture("START", Font, outsideColor, Renderer);
+    startButton->cur_texture = startButton->mouseOutside;
 
     exitButton->Rect.x = 240;
     exitButton->Rect.y = 378;
@@ -121,6 +118,7 @@ void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton
     exitButton->Rect.h = 64;
     exitButton->mouseInside = loadTextTexture("EXIT", Font, insideColor, Renderer);
     exitButton->mouseOutside = loadTextTexture("EXIT", Font, outsideColor, Renderer);
+    exitButton->cur_texture = exitButton->mouseOutside;
 
     volumeButton->Rect.x = 580;
     volumeButton->Rect.y = 0;
@@ -130,6 +128,7 @@ void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton
     volumeButton->mouseOutside_volOn = getTextureFromPath("BMPimages/Icons/volumeOnOutside.png", Renderer);
     volumeButton->mouseInside_volOff = getTextureFromPath("BMPimages/Icons/volumeOffInside.png", Renderer);
     volumeButton->mouseOutside_volOff = getTextureFromPath("BMPimages/Icons/volumeOffOutside.png", Renderer);
+    volumeButton->cur_texture = volumeButton->mouseOutside_volOn;
 }
 
 SDL_Texture* loadTextTexture(char* string, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* renderer){

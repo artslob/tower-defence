@@ -11,6 +11,7 @@
 #include "wave.h"
 
 #define COUNT_TOWER 5
+#define COUNT_SPRITES_TOWER 8
 #define PI 3.14159265
 
 typedef struct tower{
@@ -25,22 +26,11 @@ typedef struct tower{
     struct tower* next;
 }tower;
 
-typedef struct towerTextures{
-    SDL_Texture* textureTowerOne;
-    SDL_Texture* textureTowerTwo;
-    SDL_Texture* textureTowerThree;
-    SDL_Texture* textureTowerFour;
-    SDL_Texture* textureTowerFive;
-    SDL_Texture* textureTowerSix;
-    SDL_Texture* textureTowerSeven;
-    SDL_Texture* destroy_tower;
-}towerTextures;
-
 tower* createTower(void);
 void addTower(tower**);
 void createListTower(tower**);
 tower* clickedOnTowerPosition(tower*, int, int);
 
-void initTowerTextures(towerTextures* tow_textures, SDL_Renderer* Renderer);
+void initTowerTextures(SDL_Texture* enemy_sprites[COUNT_SPRITES_TOWER], SDL_Renderer* Renderer);
 
 #endif // TOWER_H

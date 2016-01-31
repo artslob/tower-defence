@@ -82,7 +82,7 @@ void renderShootingInEnemy(SDL_Renderer* Renderer, enemy* cur_enemy, tower* cur_
     }
 }
 
-void clickedUpgradeMenu(tower* cur_tower, towerTextures* tow_textures, int x, int y, int* gold){
+void clickedUpgradeMenu(tower* cur_tower, SDL_Texture* tow_textures[COUNT_SPRITES_TOWER], int x, int y, int* gold){
     if (cur_tower != NULL){
         if (cur_tower->level == 0){
             if (cur_tower->x <= x && x <= cur_tower->x + BLOCK_WIDTH &&
@@ -93,7 +93,7 @@ void clickedUpgradeMenu(tower* cur_tower, towerTextures* tow_textures, int x, in
         else if (cur_tower->level == 7){
             if (cur_tower->x <= x && x <= cur_tower->x + BLOCK_WIDTH &&
             cur_tower->y - BLOCK_HEIGHT - 5 <= y && y <= cur_tower->y - 5){
-                destroyTower(cur_tower, tow_textures, gold);
+                destroyTower(cur_tower, gold);
             }
         }
         else if (1 <= cur_tower->level & cur_tower->level <= 6){
@@ -103,49 +103,27 @@ void clickedUpgradeMenu(tower* cur_tower, towerTextures* tow_textures, int x, in
             }
             if (cur_tower->x + BLOCK_WIDTH / 2 <= x && x <= cur_tower->x + BLOCK_WIDTH * 3 / 2 &&
             cur_tower->y - BLOCK_HEIGHT - 5 <= y && y <= cur_tower->y - 5){
-                destroyTower(cur_tower, tow_textures, gold);
+                destroyTower(cur_tower, gold);
             }
         }
     }
 }
 
-void upgradeTower(tower* cur_tower, towerTextures* tow_textures, int* gold){
+void upgradeTower(tower* cur_tower, SDL_Texture* tow_textures[COUNT_SPRITES_TOWER], int* gold){
     *gold -= cur_tower->cost;
-    switch(cur_tower->level){
-    case 0:
-        cur_tower->texture = tow_textures->textureTowerOne;
-        break;
-    case 1:
-        cur_tower->texture = tow_textures->textureTowerTwo;
-        break;
-    case 2:
-        cur_tower->texture = tow_textures->textureTowerThree;
-        break;
-    case 3:
-        cur_tower->texture = tow_textures->textureTowerFour;
-        break;
-    case 4:
-        cur_tower->texture = tow_textures->textureTowerFive;
-        break;
-    case 5:
-        cur_tower->texture = tow_textures->textureTowerSix;
-        break;
-    case 6:
-        cur_tower->texture = tow_textures->textureTowerSeven;
-        break;
-    }
+    cur_tower->texture = tow_textures[cur_tower->level];
     cur_tower->cost = cur_tower->cost * 5 / 4;
     cur_tower->damage = cur_tower->damage * 6 / 4;
     cur_tower->level++;
     cur_tower->radius += 5;
 }
 
-void destroyTower(tower* cur_tower, towerTextures* tow_textures, int* gold){
+void destroyTower(tower* cur_tower, int* gold){
     *gold += cur_tower->cost / 2;
     makeStartStatesForTower(cur_tower);
 }
 
-void showTowerUpgradeMenu(tower* cur_tower, SDL_Renderer* Renderer, towerTextures* tow_textures, int gold){
+void showTowerUpgradeMenu(tower* cur_tower, SDL_Renderer* Renderer, SDL_Texture* tow_textures[COUNT_SPRITES_TOWER], int gold){
     SDL_Rect towRect;
     SDL_Rect destRect;
     if (cur_tower != NULL){
@@ -161,38 +139,17 @@ void showTowerUpgradeMenu(tower* cur_tower, SDL_Renderer* Renderer, towerTexture
         destRect.w = BLOCK_WIDTH;
         destRect.h = BLOCK_HEIGHT;
 
-        switch(cur_tower->level){
-        case 0:
-            SDL_RenderCopy(Renderer, tow_textures->textureTowerOne, NULL, &towRect);
-            break;
-        case 1:
-            SDL_RenderCopy(Renderer, tow_textures->textureTowerTwo, NULL, &towRect);
-            SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
-            break;
-        case 2:
-            SDL_RenderCopy(Renderer, tow_textures->textureTowerThree, NULL, &towRect);
-            SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
-            break;
-        case 3:
-            SDL_RenderCopy(Renderer, tow_textures->textureTowerFour, NULL, &towRect);
-            SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
-            break;
-        case 4:
-            SDL_RenderCopy(Renderer, tow_textures->textureTowerFive, NULL, &towRect);
-            SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
-            break;
-        case 5:
-            SDL_RenderCopy(Renderer, tow_textures->textureTowerSix, NULL, &towRect);
-            SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
-            break;
-        case 6:
-            SDL_RenderCopy(Renderer, tow_textures->textureTowerSeven, NULL, &towRect);
-            SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
-            break;
-        case 7:
-            SDL_RenderCopy(Renderer, tow_textures->destroy_tower, NULL, &destRect);
-            break;
+        if (cur_tower->level == 0){
+            SDL_RenderCopy(Renderer, tow_textures[0], NULL, &towRect);
         }
+        if (cur_tower->level == 7){
+            SDL_RenderCopy(Renderer, tow_textures[COUNT_SPRITES_TOWER - 1], NULL, &destRect);
+        }
+        if (1 <= cur_tower->level & cur_tower->level <= 6){
+            SDL_RenderCopy(Renderer, tow_textures[cur_tower->level], NULL, &towRect);
+            SDL_RenderCopy(Renderer, tow_textures[COUNT_SPRITES_TOWER - 1], NULL, &destRect);
+        }
+
         SDL_SetRenderDrawColor(Renderer, 0x80, 0x80, 0x80, 0x90);
         SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
         if (cur_tower->cost > gold & cur_tower->level != 7) SDL_RenderFillRect(Renderer, &towRect);
@@ -254,13 +211,12 @@ tower* createTower(void){
     return new_tower;
 }
 
-void initTowerTextures(towerTextures* tow_textures, SDL_Renderer* Renderer){
-    tow_textures->textureTowerOne = getTextureFromPath("BMPimages/Towers/1.png", Renderer);
-    tow_textures->textureTowerTwo = getTextureFromPath("BMPimages/Towers/2.png", Renderer);
-    tow_textures->textureTowerThree = getTextureFromPath("BMPimages/Towers/3.png", Renderer);
-    tow_textures->textureTowerFour = getTextureFromPath("BMPimages/Towers/4.png", Renderer);
-    tow_textures->textureTowerFive = getTextureFromPath("BMPimages/Towers/5.png", Renderer);
-    tow_textures->textureTowerSix = getTextureFromPath("BMPimages/Towers/6.png", Renderer);
-    tow_textures->textureTowerSeven= getTextureFromPath("BMPimages/Towers/7.png", Renderer);
-    tow_textures->destroy_tower = getTextureFromPath("BMPimages/Towers/dest_tow.png", Renderer);
+void initTowerTextures(SDL_Texture* enemy_sprites[COUNT_SPRITES_TOWER], SDL_Renderer* Renderer){
+    size_t i;
+    char str_path[30];
+    for (i = 0; i < COUNT_SPRITES_TOWER - 1; i++){
+        sprintf(str_path, "BMPimages/Towers/%d.png", i + 1);
+        enemy_sprites[i] = getTextureFromPath(str_path, Renderer);
+    }
+    enemy_sprites[COUNT_SPRITES_TOWER - 1] = getTextureFromPath("BMPimages/Towers/dest_tow.png", Renderer);
 }

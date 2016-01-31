@@ -3,20 +3,27 @@
 enemy* createEnemy(SDL_Texture* texture){
     enemy* newEnemy = malloc(sizeof(enemy));
     newEnemy->textureEnemy = texture;
+    newEnemy->Max_health = 180;
+    newEnemy->health = 180;
+    newEnemy->isAlive = 1;
+    newEnemy->level = 1;
+    newEnemy->angle = MOV_RIGHT;
+    newEnemy->inCave = 0;
+    newEnemy->price = 20;
     newEnemy->next = NULL;
     return newEnemy;
 }
 
-int makeNewWaveIfAllIsDead(enemy* head, sprites_enemy* en_sprites){
+int makeNewWaveIfAllIsDead(enemy* head, SDL_Texture* enemy_sparites[ENEMY_COUNT_SPRITES]){
     enemy* cur_enemy = head;
-    int count = 0;
+    size_t count = 0;
     while(cur_enemy != NULL){
         if (cur_enemy->isAlive == 1 && cur_enemy->inCave != 1) return 0;
         cur_enemy = cur_enemy->next;
     }
     cur_enemy = head;
     while (cur_enemy != NULL){
-        cur_enemy->Max_health *= 20 / 10;
+        cur_enemy->Max_health *= 2;
         cur_enemy->health = cur_enemy->Max_health;
         cur_enemy->inCave = 0;
         cur_enemy->isAlive = 1;
@@ -31,47 +38,21 @@ int makeNewWaveIfAllIsDead(enemy* head, sprites_enemy* en_sprites){
             cur_enemy->x = -630 + BLOCK_WIDTH * 3 / 2 * count;
         }
         count++;
-        switch(cur_enemy->level){
-        case 2:
-            cur_enemy->textureEnemy = en_sprites->sprite_enemy2;
-            break;
-        case 3:
-            cur_enemy->textureEnemy = en_sprites->sprite_enemy3;
-            break;
-        case 4:
-            cur_enemy->textureEnemy = en_sprites->sprite_enemy4;
-            break;
-        case 5:
-            cur_enemy->textureEnemy = en_sprites->sprite_enemy5;
-            break;
-        case 6:
-            cur_enemy->textureEnemy = en_sprites->sprite_enemy6;
-            break;
-        case 7:
-            cur_enemy->textureEnemy = en_sprites->sprite_enemy7;
-            break;
-        }
+        cur_enemy->textureEnemy = enemy_sparites[cur_enemy->level - 1];
         cur_enemy = cur_enemy->next;
     }
     return 1;
 }
 
-void createListEnemy(enemy** head, SDL_Renderer* Renderer, sprites_enemy* sprites){
+void createListEnemy(enemy** head, SDL_Renderer* Renderer, SDL_Texture* enemy_sprites[ENEMY_COUNT_SPRITES]){
     enemy* current_enemy = NULL;
-    int count;
+    size_t count;
 
     for (count = 0; count < COUNT_IN_WAVE; count++){
-        add_enemy(head, sprites->sprite_enemy1);
+        add_enemy(head, enemy_sprites[0]);
     }
     current_enemy = *head;
     for (count = 0; count < COUNT_IN_WAVE; count++){
-        current_enemy->Max_health = 180;
-        current_enemy->health = 180;
-        current_enemy->isAlive = 1;
-        current_enemy->level = 1;
-        current_enemy->angle = MOV_RIGHT;
-        current_enemy->inCave = 0;
-        current_enemy->price = 20;
         if (count < COUNT_IN_WAVE / 2){
             current_enemy->position = POS_UP;
             current_enemy->y = 40;
@@ -86,83 +67,83 @@ void createListEnemy(enemy** head, SDL_Renderer* Renderer, sprites_enemy* sprite
     }
 }
 
-void moveEnemies(enemy* head, points* points_up, points* points_down){
-    int count = 0;
+void moveEnemies(enemy* head, point points_up[POINTS_COUNT], point points_down[POINTS_COUNT]){
+    size_t count = 0;
     int check = 0;
     enemy* current_enemy = head;
     for (count = 0; count < COUNT_IN_WAVE; count++){
         if (current_enemy->position == POS_UP){
-            if (current_enemy->y == points_up->pos_y_1) {
+            if (current_enemy->y == points_up[0].y) {
                 current_enemy->angle = MOV_RIGHT;
                 current_enemy->x++;
             }
-            if (current_enemy->x == points_up->pos_x_2) {
+            if (current_enemy->x == points_up[1].x) {
                 current_enemy->y++;
                 current_enemy->angle = MOV_DOWN;
             }
-            if (current_enemy->y == points_up->pos_y_2) {
+            if (current_enemy->y == points_up[1].y) {
                 current_enemy->x++;
                 current_enemy->angle = MOV_RIGHT;
             }
-            if (current_enemy->x == points_up->pos_x_3){
+            if (current_enemy->x == points_up[2].x){
                 current_enemy->y++;
                 current_enemy->angle = MOV_DOWN;
             }
-            if (current_enemy->y == points_up->pos_y_4 & current_enemy->x < points_up->pos_x_7){
+            if (current_enemy->y == points_up[3].y & current_enemy->x < points_up[6].x){
                 current_enemy->x++;
                 current_enemy->angle = MOV_RIGHT;
             }
-            if (current_enemy->x == points_up->pos_x_5){
+            if (current_enemy->x == points_up[4].x){
                 current_enemy->y++;
                 current_enemy->angle = MOV_DOWN;
             }
-            if (current_enemy->y == points_up->pos_y_6){
+            if (current_enemy->y == points_up[5].y){
                 current_enemy->x++;
                 current_enemy->angle = MOV_RIGHT;
             }
-            if (current_enemy->x == points_up->pos_x_7){
+            if (current_enemy->x == points_up[6].x){
                 current_enemy->y--;
                 current_enemy->angle = MOV_UP;
             }
-            if (current_enemy->x == points_up->pos_x_9){
+            if (current_enemy->x == points_up[8].x){
                 current_enemy->y++;
                 current_enemy->angle = MOV_DOWN;
             }
         }
         else{
-            if (current_enemy->y == points_down->pos_y_1){
+            if (current_enemy->y == points_down[0].y){
                 current_enemy->x++;
                 current_enemy->angle = MOV_RIGHT;
             }
-            if (current_enemy->x == points_down->pos_x_2) {
+            if (current_enemy->x == points_down[1].x) {
                 current_enemy->y--;
                 current_enemy->angle = MOV_UP;
             }
-            if (current_enemy->y == points_down->pos_y_3 & current_enemy->x < points_down->pos_x_8) {
+            if (current_enemy->y == points_down[2].y & current_enemy->x < points_down[7].x) {
                 current_enemy->x++;
                 current_enemy->angle = MOV_RIGHT;
             }
-            if (current_enemy->x == points_down->pos_x_4){
+            if (current_enemy->x == points_down[3].x){
                 current_enemy->y--;
                 current_enemy->angle = MOV_UP;
             }
-            if (current_enemy->y == points_down->pos_y_5 & current_enemy->x < points_down->pos_x_8){
+            if (current_enemy->y == points_down[4].y & current_enemy->x < points_down[7].x){
                 current_enemy->x++;
                 current_enemy->angle = MOV_RIGHT;
             }
-            if (current_enemy->x == points_up->pos_x_6){
+            if (current_enemy->x == points_up[5].x){
                 current_enemy->y--;
                 current_enemy->angle = MOV_UP;
             }
-            if (current_enemy->y == points_up->pos_y_6){
+            if (current_enemy->y == points_up[5].y){
                 current_enemy->x++;
                 current_enemy->angle = MOV_RIGHT;
             }
-            if (current_enemy->x == points_up->pos_x_7){
+            if (current_enemy->x == points_up[6].x){
                 current_enemy->y++;
                 current_enemy->angle = MOV_DOWN;
             }
-            if (current_enemy->x == points_up->pos_x_9){
+            if (current_enemy->x == points_up[8].x){
                 current_enemy->y--;
                 current_enemy->angle = MOV_UP;
             }
@@ -194,9 +175,9 @@ void showHPbar(SDL_Renderer* Renderer, enemy* head){
     }
 }
 
-void enemyEnterCave(enemy* head, points* points, int* hp){
+void enemyEnterCave(enemy* head, point array_points[POINTS_COUNT], int* hp){
     while(head != NULL){
-        if (head->x >= points->pos_x_11 & head->isAlive == 1) {
+        if (head->x >= array_points[10].x & head->isAlive == 1) {
             head->isAlive = 0;
             if (*hp > 0 & head->inCave == 0){
                 head->inCave = 1;
@@ -208,7 +189,7 @@ void enemyEnterCave(enemy* head, points* points, int* hp){
 }
 
 void renderEnemies(SDL_Renderer* Renderer, enemy* head, int animation){
-    int i = 0;
+    size_t i = 0;
     SDL_Rect dstRect;
     SDL_Rect srcRect;
     for (i = 0; i < COUNT_IN_WAVE; i++){
@@ -236,54 +217,39 @@ void renderEnemies(SDL_Renderer* Renderer, enemy* head, int animation){
     }
 }
 
-void init_points_up(points* points_up){
-    points_up->pos_x_1 = 80;
-    points_up->pos_y_1 = 40;
-    points_up->pos_x_2 = 80;
-    points_up->pos_y_2 = 80;
-    points_up->pos_x_3 = 240;
-    points_up->pos_y_3 = 80;
-    points_up->pos_x_4 = 240;
-    points_up->pos_y_4 = 200;
-    points_up->pos_x_5 = 280;
-    points_up->pos_y_5 = 200;
-    points_up->pos_x_6 = 280;
-    points_up->pos_y_6 = 240;
-    points_up->pos_x_7 = 360;
-    points_up->pos_y_7 = 240;
-    points_up->pos_x_8 = 360;
-    points_up->pos_y_8 = 80;
-    points_up->pos_x_9 = 440;
-    points_up->pos_y_9 = 80;
-    points_up->pos_x_10 = 440;
-    points_up->pos_y_10 = 240;
-    points_up->pos_x_11 = 480;
-    points_up->pos_y_11 = 240;
+void initPointsUp(point array_points[POINTS_COUNT]){
+    array_points[0] = createPoint(80, 40);
+    array_points[1] = createPoint(80, 80);
+    array_points[2] = createPoint(240, 80);
+    array_points[3] = createPoint(240, 200);
+    array_points[4] = createPoint(280, 200);
+    array_points[5] = createPoint(280, 240);
+    array_points[6] = createPoint(360, 240);
+    array_points[7] = createPoint(360, 80);
+    array_points[8] = createPoint(440, 80);
+    array_points[9] = createPoint(440, 240);
+    array_points[10] = createPoint(480, 240);
 }
 
-void init_points_down(points* points_down){
-    points_down->pos_x_1 = 80;
-    points_down->pos_y_1 = 400;
-    points_down->pos_x_2 = 80;
-    points_down->pos_y_2 = 360;
-    points_down->pos_x_3 = 160;
-    points_down->pos_y_3 = 360;
-    points_down->pos_x_4 = 160;
-    points_down->pos_y_4 = 280;
-    points_down->pos_x_5 = 280;
-    points_down->pos_y_5 = 280;
-    points_down->pos_x_6 = 280;
-    points_down->pos_y_6 = 240;
-    points_down->pos_x_7 = 360;
-    points_down->pos_y_7 = 240;
-    points_down->pos_x_8 = 360;
-    points_down->pos_y_8 = 400;
-    points_down->pos_x_9= 440;
-    points_down->pos_y_9 = 400;
-    points_down->pos_x_10 = 440;
-    points_down->pos_y_10 = 240;
-    points_down->pos_x_11 = 480;
-    points_down->pos_y_11 = 240;
+void initPointsDown(point array_points[POINTS_COUNT]){
+    array_points[0] = createPoint(80, 400);
+    array_points[1] = createPoint(80, 360);
+    array_points[2] = createPoint(160, 360);
+    array_points[3] = createPoint(160, 280);
+    array_points[4] = createPoint(280, 280);
+    array_points[5] = createPoint(280, 240);
+    array_points[6] = createPoint(360, 240);
+    array_points[7] = createPoint(360, 400);
+    array_points[8] = createPoint(440, 400);
+    array_points[9] = createPoint(440, 240);
+    array_points[10] = createPoint(480, 240);
+}
+
+point createPoint(int x, int y){
+    point new_point;
+    new_point.x = x;
+    new_point.y = y;
+    return new_point;
 }
 
 void add_enemy(enemy** head, SDL_Texture* texture){
@@ -298,14 +264,11 @@ void add_enemy(enemy** head, SDL_Texture* texture){
     else *head = new_enemy;
 }
 
-sprites_enemy* init_sprites_enemy(SDL_Renderer* Renderer){
-    sprites_enemy* new_sprites = malloc(sizeof(sprites_enemy));
-    new_sprites->sprite_enemy1 = getTextureFromPath("BMPimages/Wave/1.png", Renderer);
-    new_sprites->sprite_enemy2 = getTextureFromPath("BMPimages/Wave/2.png", Renderer);
-    new_sprites->sprite_enemy3 = getTextureFromPath("BMPimages/Wave/3.png", Renderer);
-    new_sprites->sprite_enemy4 = getTextureFromPath("BMPimages/Wave/4.png", Renderer);
-    new_sprites->sprite_enemy5 = getTextureFromPath("BMPimages/Wave/5.png", Renderer);
-    new_sprites->sprite_enemy6 = getTextureFromPath("BMPimages/Wave/6.png", Renderer);
-    new_sprites->sprite_enemy7 = getTextureFromPath("BMPimages/Wave/7.png", Renderer);
-    return new_sprites;
+void initEnemiesSprites(SDL_Texture* sprites_array[ENEMY_COUNT_SPRITES], SDL_Renderer* Renderer){
+    size_t i;
+    char str_path[30];
+    for (i = 0; i < ENEMY_COUNT_SPRITES; i++){
+        sprintf(str_path, "BMPimages/Wave/%d.png", i + 1);
+        sprites_array[i] = getTextureFromPath(str_path, Renderer);
+    }
 }

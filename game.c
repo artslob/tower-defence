@@ -1,23 +1,22 @@
 #include "game.h"
 
 int game(SDL_Renderer* Renderer, block* BGhead){
-    int state = IN_GAME;
+    GameStates state = IN_GAME;
     SDL_Event event;
     SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.bmp", Renderer);
-    int timer = 0;
     int frame = 0;
     int x = 0, y = 0;
     char string_buff[10];
 
-    points* points_up = malloc(sizeof(points));
-    points* points_down = malloc(sizeof(points));
+    point Points_up[POINTS_COUNT];
+    point Points_down[POINTS_COUNT];
 
-    towerTextures* tow_textures = malloc(sizeof(towerTextures));
+    SDL_Texture* tow_textures[COUNT_SPRITES_TOWER];
     tower* tow_head = NULL;
     tower* choosedTowerPoint = NULL;
 
     enemy* enemy_head = NULL;
-    sprites_enemy* enemy_sprites = init_sprites_enemy(Renderer);
+    SDL_Texture* enemies_sprites[ENEMY_COUNT_SPRITES];
 
     int HealthPoints = 100;
     int ExHealthPoints = 100;
@@ -49,15 +48,16 @@ int game(SDL_Renderer* Renderer, block* BGhead){
     SDL_Texture* coinNumberTexture = getTextureFromInt(Gold, string_buff, Font, textColor, Renderer);
     SDL_Rect coinNumberRect = {14 * BLOCK_WIDTH, 0, 2 * BLOCK_WIDTH, BLOCK_HEIGHT};
 
-    createListEnemy(&enemy_head, Renderer, enemy_sprites);
+
+    initEnemiesSprites(enemies_sprites, Renderer);
+    createListEnemy(&enemy_head, Renderer, enemies_sprites);
     initRewindButton(RewButton, Renderer);
-    init_points_up(points_up);
-    init_points_down(points_down);
+    initPointsUp(Points_up);
+    initPointsDown(Points_down);
     initTowerTextures(tow_textures, Renderer);
     createListTower(&tow_head);
     RewTexture = RewButton->rewindOff_outside;
     while(state == IN_GAME){
-        timer = SDL_GetTicks();
         while(SDL_PollEvent(&event)){
             SDL_GetMouseState(&x, &y);
             if (event.type == SDL_MOUSEBUTTONDOWN){
@@ -70,6 +70,7 @@ int game(SDL_Renderer* Renderer, block* BGhead){
             }
             if (event.type == SDL_QUIT){
                 state = EXIT;
+                return state;
             }
         }
         SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -77,13 +78,12 @@ int game(SDL_Renderer* Renderer, block* BGhead){
 
         BG_list_render(Renderer, BGhead);
 
-        moveEnemies(enemy_head, points_up, points_down);
-        enemyEnterCave(enemy_head, points_up, &HealthPoints);
+        moveEnemies(enemy_head, Points_up, Points_down);
+        enemyEnterCave(enemy_head, Points_up, &HealthPoints);
         renderEnemies(Renderer, enemy_head, frame / (FPS / 3));
         showHPbar(Renderer, enemy_head);
         renderTowersAndShoot(tow_head, enemy_head, Renderer, &Gold);
         showTowerUpgradeMenu(choosedTowerPoint, Renderer, tow_textures, Gold);
-
 
         SDL_RenderCopy(Renderer, waveTexture, NULL, &waveTextureRect);
         SDL_RenderCopy(Renderer, waveCountTexture, NULL, &waveCountRect);
@@ -97,7 +97,7 @@ int game(SDL_Renderer* Renderer, block* BGhead){
         SDL_RenderPresent(Renderer);
 
         state = getGameState(enemy_head, HealthPoints);
-        if (makeNewWaveIfAllIsDead(enemy_head, enemy_sprites)) Wave++;
+        if (makeNewWaveIfAllIsDead(enemy_head, enemies_sprites)) Wave++;
         if (Wave != ExWave | ExHealthPoints != HealthPoints | ExGold != Gold){
             ExWave = Wave;
             ExHealthPoints = HealthPoints;
@@ -112,7 +112,7 @@ int game(SDL_Renderer* Renderer, block* BGhead){
 
         frame++;
         if (frame >= FPS) frame = 0;
-        waitForFps(timer, FPS);
+        waitForFps(FPS);
         getFps();
     }
     return state;
