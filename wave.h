@@ -1,10 +1,10 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <SDL_mixer.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 
 #include "bg.h"
 
@@ -50,7 +50,6 @@ void add_enemy(enemy**, SDL_Texture*);
 void createListEnemy(enemy** head, SDL_Renderer* Renderer, SDL_Texture* enemy_sprites[ENEMY_COUNT_SPRITES]);
 void moveEnemies(enemy* head, point points_up[POINTS_COUNT], point points_down[POINTS_COUNT]);
 void renderEnemies(SDL_Renderer*, enemy*, int);
-void moveEnemies(enemy* head, point points_up[POINTS_COUNT], point points_down[POINTS_COUNT]);
 void enemyEnterCave(enemy* head, point array_points[POINTS_COUNT], int* hp);
 void showHPbar(SDL_Renderer*, enemy*);
 point createPoint(int x, int y);

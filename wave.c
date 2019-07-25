@@ -1,4 +1,5 @@
 #include "wave.h"
+#include "global.h"
 
 enemy* createEnemy(SDL_Texture* texture){
     enemy* newEnemy = malloc(sizeof(enemy));

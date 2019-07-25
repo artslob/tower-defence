@@ -120,8 +120,10 @@ int game(SDL_Renderer* Renderer, block* BGhead){
 
 SDL_Texture* getTextureFromInt(int number, char* buff, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* Renderer){
     SDL_Texture* newTexture = NULL;
-    itoa(number, buff, 10);
-    newTexture = loadTextTexture(buff, Font, textColor, Renderer);
+    //itoa(number, buff, 10);
+    char str[100];
+    sprintf(str, "%d", number);
+    newTexture = loadTextTexture(str, Font, textColor, Renderer);
     return newTexture;
 }
 
