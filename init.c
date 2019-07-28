@@ -3,8 +3,7 @@
 int init(SDL_Window** window, SDL_Renderer** renderer){
     int success = 1;
 
-    // if (SDL_Init(SDL_INIT_EVERYTHING) < 0){
-    if (SDL_Init(SDL_INIT_VIDEO) < 0){
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0){
         prError("SDL_Init cant run");
         success = 0;
     }
@@ -33,24 +32,24 @@ int init(SDL_Window** window, SDL_Renderer** renderer){
                     sprintf(stderr, "Unable to initialize SDL_image: %s \n", IMG_GetError());
                     success = 0;
                 }
-                /*if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
+                if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0){
                     sprintf(stderr, "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
                     success = 0;
-                }*/
+                }
             }
         }
     }
     return success;
 }
 
-void close(SDL_Renderer** renderer, SDL_Window** window){
-    // Mix_HaltMusic();
-    // SDL_DestroyRenderer(*renderer);
+void closeSDLResources(SDL_Renderer** renderer, SDL_Window** window){
+    Mix_HaltMusic();
+    SDL_DestroyRenderer(*renderer);
 
-    // SDL_DestroyWindow(*window);
+    SDL_DestroyWindow(*window);
 
-    // Mix_Quit();
-    // IMG_Quit();
-    // TTF_Quit();
-    // SDL_Quit();
+    Mix_Quit();
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
 }

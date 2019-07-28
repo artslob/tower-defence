@@ -18,7 +18,7 @@ int main(int argc, char* args[]){
             playLastScene(Renderer, Window, block_head, state);
         }
     }
-    close(&Renderer, &Window);
+    closeSDLResources(&Renderer, &Window);
     return 0;
 }
 
