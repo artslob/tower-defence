@@ -61,5 +61,5 @@ void waitForFps(size_t fps){
 }
 
 void prError(char* str){
-    sprintf(stderr, "%s! %s\n", str, SDL_GetError());
+    fprintf(stderr, "%s! %s\n", str, SDL_GetError());
 }
