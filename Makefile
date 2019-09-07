@@ -1,4 +1,4 @@
-OBJS = bg.c  game.c  init.c  main.c  startscreen.c  tower.c  wave.c utils.c
+OBJS = bg.c game.c main.c startscreen.c tower.c wave.c utils.c
 
 # compiler
 CC = gcc
