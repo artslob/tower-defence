@@ -1,7 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include "include_sdl.h"
+#include "include_sdl2.h"
 #include "bg.h"
 
 #define SCREEN_WIDTH 640

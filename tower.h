@@ -1,18 +1,17 @@
 #ifndef TOWER_H
 #define TOWER_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-#include <math.h>
 
+#include <math.h>
+#include "include_sdl2.h"
 #include "bg.h"
 #include "wave.h"
+
 
 #define COUNT_TOWER 5
 #define COUNT_SPRITES_TOWER 8
 #define PI 3.14159265
+
 
 typedef struct tower {
     SDL_Texture* texture;
@@ -25,6 +24,7 @@ typedef struct tower {
     int radius;
     struct tower* next;
 } tower;
+
 
 void initTowerTextures(SDL_Texture* enemy_sprites[COUNT_SPRITES_TOWER], SDL_Renderer* Renderer);
 tower* clickedOnTowerPosition(tower* head, int x, int y);
@@ -39,5 +39,6 @@ void addTower(tower** head);
 void makeStartStatesForTower(tower* cur_tower);
 tower* createTower(void);
 void initTowerTextures(SDL_Texture* enemy_sprites[COUNT_SPRITES_TOWER], SDL_Renderer* Renderer);
+
 
 #endif // TOWER_H

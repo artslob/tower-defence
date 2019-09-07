@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "include_sdl.h"
+#include "include_sdl2.h"
 
 #include "main.h"
 #include "startscreen.h"

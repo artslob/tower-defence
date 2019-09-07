@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <malloc.h>
 
-#include "include_sdl.h"
+#include "include_sdl2.h"
 
 
 #define SCREEN_WIDTH 640
