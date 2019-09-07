@@ -1,6 +1,7 @@
 #ifndef BG_H
 #define BG_H
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>

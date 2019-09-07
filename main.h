@@ -1,11 +1,14 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+
 #include "include_sdl2.h"
 #include "bg.h"
 
+
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+
 
 typedef enum GameStates{
     IN_MENU,
@@ -25,4 +28,5 @@ void getFps(void);
 void waitForFps(size_t fps);
 void prError(char* str);
 
-#endif // STD_H
+
+#endif // MAIN_H

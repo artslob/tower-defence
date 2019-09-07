@@ -3,6 +3,7 @@
 
 
 #include <math.h>
+
 #include "include_sdl2.h"
 #include "bg.h"
 #include "wave.h"

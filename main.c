@@ -8,6 +8,7 @@
 SDL_Window* Window = NULL;
 SDL_Renderer* Renderer = NULL;
 
+
 int main(int argc, char* args[]){
     block* block_head = NULL;
     GameStates state;
