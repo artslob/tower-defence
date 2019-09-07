@@ -20,7 +20,4 @@ typedef enum GameStates {
 } GameStates;
 
 
-void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, GameStates state);
-
-
 #endif // MAIN_H

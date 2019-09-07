@@ -6,6 +6,9 @@
 #include "utils.h"
 
 
+void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, GameStates state);
+
+
 SDL_Window* Window = NULL;
 SDL_Renderer* Renderer = NULL;
 
