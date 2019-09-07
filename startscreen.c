@@ -152,7 +152,7 @@ SDL_Texture* loadTextTexture(char* string, TTF_Font* Font, SDL_Color textColor, 
     return texture;
 }
 
-void renderInfinityText(SDL_Renderer* Renderer, SDL_Texture* Texture,int* displace, int width_picture, int count, float speed){
+void renderInfinityText(SDL_Renderer* Renderer, SDL_Texture* Texture, size_t* displace, int width_picture, int count, float speed){
     SDL_Rect textureRect = {*displace, 0, width_picture, SCREEN_HEIGHT};
     SDL_Rect screenRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     SDL_RenderCopy(Renderer, Texture, &textureRect, &screenRect);

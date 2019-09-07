@@ -36,7 +36,7 @@ int menu(SDL_Renderer* Renderer);
 void initMenuBgSprites(SDL_Renderer* Renderer, SDL_Texture* array[BG_SPRITES]);
 void initButtons(SDL_Renderer* Renderer, TTF_Font* Font, ButtonMenu* startButton, ButtonMenu* exitButton, VolumeMenu* volumeButton);
 SDL_Texture* loadTextTexture(char* string, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* renderer);
-void renderInfinityText(SDL_Renderer* Renderer, SDL_Texture* Texture,int* displace, int width_picture, int count, float speed);
+void renderInfinityText(SDL_Renderer* Renderer, SDL_Texture* Texture, size_t* displace, int width_picture, int count, float speed);
 
 
 #endif // STARTSCREEN_H
