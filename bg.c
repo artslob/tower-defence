@@ -74,7 +74,7 @@ int* openMap(char* str_path){
             }
         }
     }
-    else sprintf(stderr, "Cant open map! Path: %s.\n", str_path);
+    else fprintf(stderr, "Cant open map! Path: %s.\n", str_path);
     fclose(fp);
     return buff;
 }

@@ -5,10 +5,10 @@ SDL_Texture* getTextureFromPath(char* path, SDL_Renderer* Renderer){
     SDL_Texture* newTexture = NULL;
     SDL_Surface* loadedSurface = NULL;
     if ((loadedSurface = IMG_Load(path)) == NULL)
-        sprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
-    else{
+        fprintf(stderr, "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
+    else {
         if ((newTexture = SDL_CreateTextureFromSurface(Renderer, loadedSurface)) == NULL){
-            sprintf(stderr, "Unable to create texture from %s! SDL Error: %s\n", path, SDL_GetError() );
+            fprintf(stderr, "Unable to create texture from %s! SDL Error: %s\n", path, SDL_GetError() );
         }
         SDL_FreeSurface(loadedSurface);
     }
