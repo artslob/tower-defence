@@ -6,32 +6,30 @@
 #include "utils.h"
 
 
-void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, GameStates state);
+void playLastScene(SDL_Renderer* renderer, SDL_Window* window, block* block_head, GameStates state);
 
 
-SDL_Window* Window = NULL;
-SDL_Renderer* Renderer = NULL;
-
-
-int main(int argc, char* args[]){
+int main(int argc, char* args[]) {
+    SDL_Window* window = NULL;
+    SDL_Renderer* renderer = NULL;
     block* block_head = NULL;
     GameStates state;
 
-    if (init(&Window, &Renderer)){
+    if (init(&window, &renderer)){
         SDL_ShowCursor(0);
-        BG_list_create(Renderer, &block_head);
+        BG_list_create(renderer, &block_head);
 
-        state = menu(Renderer);
+        state = menu(renderer);
         if (state == START){
-            state = game(Renderer, block_head);
-            playLastScene(Renderer, Window, block_head, state);
+            state = game(renderer, block_head);
+            playLastScene(renderer, window, block_head, state);
         }
     }
-    closeSDLResources(&Renderer, &Window);
+    closeSDLResources(&renderer, &window);
     return 0;
 }
 
-void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, GameStates state){
+void playLastScene(SDL_Renderer* renderer, SDL_Window* window, block* block_head, GameStates state) {
     SDL_Texture* lastWords = NULL;
     SDL_Color textColor = {255, 0, 0};
     TTF_Font* Font = TTF_OpenFont("TTFtext/GOST-type-B-Standard.ttf", 1000);
@@ -39,20 +37,20 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
 
     int blend = 0;
     SDL_Rect bgRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-    SDL_Surface* oldSurface = SDL_GetWindowSurface(Window);
-    SDL_Texture* oldTexture = SDL_CreateTextureFromSurface(Renderer, oldSurface);
+    SDL_Surface* oldSurface = SDL_GetWindowSurface(window);
+    SDL_Texture* oldTexture = SDL_CreateTextureFromSurface(renderer, oldSurface);
 
-    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.bmp", Renderer);
+    SDL_Texture* cursor_texture = getTextureFromPath("BMPimages/Cursor/1.bmp", renderer);
     GameStates new_state = IN_GAME;
     SDL_Event event;
 
     size_t FPS = 70;
 
     if (state == WIN){
-        lastWords = loadTextTexture("YOU WIN", Font, textColor, Renderer);
+        lastWords = loadTextTexture("YOU WIN", Font, textColor, renderer);
     }
     if (state == GAME_OVER){
-        lastWords = loadTextTexture("YOU LOST", Font, textColor, Renderer);
+        lastWords = loadTextTexture("YOU LOST", Font, textColor, renderer);
     }
     if (state != EXIT){
         Mix_FadeOutMusic(5000);
@@ -62,18 +60,18 @@ void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head
                     new_state = EXIT;
                 }
             }
-            SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-            SDL_RenderClear(Renderer);
+            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_RenderClear(renderer);
 
-            BG_list_render(Renderer, block_head);
-            SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
-            SDL_SetRenderDrawColor(Renderer, 0, 0, 0, blend);
-            SDL_RenderFillRect(Renderer, &bgRect);
+            BG_list_render(renderer, block_head);
+            SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, blend);
+            SDL_RenderFillRect(renderer, &bgRect);
 
-            SDL_RenderCopy(Renderer, lastWords, NULL, &textRect);
+            SDL_RenderCopy(renderer, lastWords, NULL, &textRect);
 
-            showCursor(Renderer, cursor_texture);
-            SDL_RenderPresent(Renderer);
+            showCursor(renderer, cursor_texture);
+            SDL_RenderPresent(renderer);
 
             if (blend < 253) blend += 1;
 
