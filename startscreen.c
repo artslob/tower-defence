@@ -1,4 +1,6 @@
 #include "startscreen.h"
+#include "main.h"
+
 
 int menu(SDL_Renderer* Renderer){
     SDL_Event event;

@@ -16,4 +16,5 @@
 int init(SDL_Window**, SDL_Renderer**);
 void closeSDLResources(SDL_Renderer**, SDL_Window**);
 
+
 #endif // INIT_H

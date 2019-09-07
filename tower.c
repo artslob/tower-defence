@@ -1,5 +1,6 @@
 #include "tower.h"
-#include "global.h"
+#include "main.h"
+
 
 tower* clickedOnTowerPosition(tower* head, int x, int y){
     tower* cur_tower = head;

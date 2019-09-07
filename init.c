@@ -1,4 +1,6 @@
 #include "init.h"
+#include "main.h"
+
 
 int init(SDL_Window** window, SDL_Renderer** renderer){
     int success = 1;

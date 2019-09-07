@@ -1,5 +1,6 @@
 #include "bg.h"
-#include "global.h"
+#include "main.h"
+
 
 void BG_list_render(SDL_Renderer* Renderer, block* head){
     int i = 0, j = 0;

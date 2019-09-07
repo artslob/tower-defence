@@ -4,7 +4,7 @@ OBJS = bg.c  game.c  init.c  main.c  startscreen.c  tower.c  wave.c
 CC = gcc
 
 # -w suppresses all warnings
-COMPILER_FLAGS = -w
+COMPILER_FLAGS = -Werror=implicit-function-declaration -Wno-int-conversion -Wno-format -Wno-incompatible-pointer-types
 
 # specifies the libraries we're linking against
 LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm

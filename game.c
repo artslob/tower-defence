@@ -1,4 +1,7 @@
 #include "game.h"
+#include "main.h"
+#include "wave.h"
+
 
 int game(SDL_Renderer* Renderer, block* BGhead){
     GameStates state = IN_GAME;

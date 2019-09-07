@@ -1,13 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
+#include "include_sdl.h"
 
 #include "main.h"
-#include "global.h"
 #include "startscreen.h"
 #include "wave.h"
 #include "tower.h"
@@ -17,22 +13,27 @@
 
 #define REWIND_FACTOR (18 / 10)
 
-enum states_tewind{
+
+enum states_tewind {
     IN_REWIND,
     NOT_IN_REWIND
 };
 
-typedef struct rewind_button{
+typedef struct rewind_button {
     SDL_Texture* rewindOn_inside;
     SDL_Texture* rewindOn_outside;
     SDL_Texture* rewindOff_inside;
     SDL_Texture* rewindOff_outside;
     SDL_Rect Rect;
-}rewind_button;
+} rewind_button;
 
 
-int game(SDL_Renderer*, block*);
+int game(SDL_Renderer* Renderer, block* BGhead);
 SDL_Texture* getTextureFromInt(int number, char* buff, TTF_Font* Font, SDL_Color textColor, SDL_Renderer* Renderer);
+void clickedRewind(rewind_button* button, SDL_Texture** RewTexture, int x, int y, int* isRewind, int* FPS, tower* tow_head);
+void mouseInsideRewindButton(rewind_button* button, SDL_Texture** RewTexture, int x, int y, int IsRewind);
+void initRewindButton(rewind_button* button, SDL_Renderer* Renderer);
+int getGameState(enemy* enemy_head, int HealthPoint);
 
 
 #endif // GAME_H

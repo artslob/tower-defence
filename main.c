@@ -1,9 +1,13 @@
-#include "global.h"
+#include "main.h"
+#include "init.h"
+#include "bg.h"
+#include "game.h"
+#include "startscreen.h"
+
 
 SDL_Window* Window = NULL;
 SDL_Renderer* Renderer = NULL;
 
-/*  */
 int main(int argc, char* args[]){
     block* block_head = NULL;
     GameStates state;

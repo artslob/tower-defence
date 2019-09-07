@@ -1,18 +1,28 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
+#include "include_sdl.h"
+#include "bg.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
-SDL_Texture* getTextureFromPath(char*, SDL_Renderer*);
-void showCursor(SDL_Renderer*, SDL_Texture*);
+typedef enum GameStates{
+    IN_MENU,
+    START,
+    IN_GAME,
+    GAME_OVER,
+    WIN,
+    EXIT
+} GameStates;
 
+
+void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, GameStates state);
+SDL_Texture* getTextureFromPath(char* path, SDL_Renderer* Renderer);
+int isInsideRect(int x, int y, SDL_Rect Rect);
+void showCursor(SDL_Renderer* Renderer, SDL_Texture* cursor_texture);
+void getFps(void);
 void waitForFps(size_t fps);
-void prError(char*);
+void prError(char* str);
 
 #endif // STD_H
