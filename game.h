@@ -3,7 +3,6 @@
 
 
 #include "include_sdl2.h"
-#include "main.h"
 #include "startscreen.h"
 #include "wave.h"
 #include "tower.h"

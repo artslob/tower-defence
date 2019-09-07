@@ -1,5 +1,6 @@
 #include "startscreen.h"
 #include "main.h"
+#include "utils.h"
 
 
 int menu(SDL_Renderer* Renderer){

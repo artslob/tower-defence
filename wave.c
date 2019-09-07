@@ -1,5 +1,5 @@
 #include "wave.h"
-#include "main.h"
+#include "utils.h"
 
 
 enemy* createEnemy(SDL_Texture* texture){

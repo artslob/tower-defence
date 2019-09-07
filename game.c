@@ -1,6 +1,7 @@
 #include "game.h"
 #include "main.h"
 #include "wave.h"
+#include "utils.h"
 
 
 int game(SDL_Renderer* Renderer, block* BGhead){

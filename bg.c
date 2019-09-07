@@ -1,5 +1,5 @@
 #include "bg.h"
-#include "main.h"
+#include "utils.h"
 
 
 void BG_list_render(SDL_Renderer* Renderer, block* head){

@@ -1,5 +1,5 @@
 #include "init.h"
-#include "main.h"
+#include "utils.h"
 
 
 int init(SDL_Window** window, SDL_Renderer** renderer){

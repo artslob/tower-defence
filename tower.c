@@ -1,5 +1,5 @@
 #include "tower.h"
-#include "main.h"
+#include "utils.h"
 
 
 tower* clickedOnTowerPosition(tower* head, int x, int y){

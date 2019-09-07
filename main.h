@@ -10,7 +10,7 @@
 #define SCREEN_HEIGHT 480
 
 
-typedef enum GameStates{
+typedef enum GameStates {
     IN_MENU,
     START,
     IN_GAME,
@@ -21,12 +21,6 @@ typedef enum GameStates{
 
 
 void playLastScene(SDL_Renderer* Renderer, SDL_Window* Window, block* block_head, GameStates state);
-SDL_Texture* getTextureFromPath(char* path, SDL_Renderer* Renderer);
-int isInsideRect(int x, int y, SDL_Rect Rect);
-void showCursor(SDL_Renderer* Renderer, SDL_Texture* cursor_texture);
-void getFps(void);
-void waitForFps(size_t fps);
-void prError(char* str);
 
 
 #endif // MAIN_H
