@@ -8,7 +8,7 @@ COMPILER_FLAGS = -Werror=implicit-function-declaration -Wno-int-conversion -Wno-
 # specifies the libraries we're linking against
 LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
 
-# the name of the exectuable
+# the name of the executable
 OBJ_NAME = game
 
 all : $(OBJS)
