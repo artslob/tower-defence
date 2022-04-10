@@ -3,8 +3,11 @@ Game written in C with SDL2 framework.
 
 Made back in 2016 for university project. The code is preserved almost in its original form.
 
-Video:
-[![Tower Defence](http://img.youtube.com/vi/1lW92GdfKzc/0.jpg)](http://www.youtube.com/watch?v=1lW92GdfKzc "Tower Defence")
+Gameplay:
+
+![alt text](misc/gameplay.gif)
+
+Also [video](http://www.youtube.com/watch?v=1lW92GdfKzc) version with sound.
 
 ## How to run
 Install dependencies on Ubuntu:
